@@ -1,4 +1,4 @@
-![logo](http://blockapps.net/wp-content/uploads/2016/12/blockapps-logo-horizontal-blue-for-web-transparent.png)
+![logo](https://blockapps.net/wp-content/uploads/2025/01/STAKEABLE_GOLD_HALF.png)
 
 # STRATO Platform
 
