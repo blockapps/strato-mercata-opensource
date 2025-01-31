@@ -1,4 +1,4 @@
-[![BlockApps logo](https://docs.blockapps.net/_images/blockapps-logo-horizontal-label.jpg)](http://blockapps.net)
+![logo](https://blockapps.net/wp-content/uploads/2025/01/STAKEABLE_GOLD_HALF.png)
 
 # STRATO Mercata platform (open source snapshot)
 
