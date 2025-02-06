@@ -8,5 +8,5 @@ Follow steps from [AWS documentation](https://docs.aws.amazon.com/eks/latest/use
 * *aws eks update-kubeconfig --name ba-dev3 --region us-east-1*
 
 # Execute the run script
-cd devops/eks/strato
+cd k8s/eks/strato
 ./run.sh

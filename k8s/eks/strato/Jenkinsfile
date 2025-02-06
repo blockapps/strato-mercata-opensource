@@ -14,7 +14,7 @@ pipeline {
         STRIPE_PUBLISHABLE_KEY     = credentials('EKS_STRIPE_PUBLISHABLE_KEY')
         STRIPE_SECRET_KEY     = credentials('EKS_STRIPE_SECRET_KEY')
         KUBECTL='/home/ubuntu/bin/kubectl'
-        MANIFEST_PATH = './devops/eks/strato'
+        MANIFEST_PATH = './k8s/eks/strato'
     }
     stages {
         stage('Stage 1') {
