@@ -1,5 +1,6 @@
 FROM openresty/openresty:1.21.4.1-6-bullseye
-MAINTAINER BlockApps Inc.
+
+LABEL org.opencontainers.image.authors="BlockApps Inc."
 
 ENV DEBIAN_FRONTEND=noninteractive
 

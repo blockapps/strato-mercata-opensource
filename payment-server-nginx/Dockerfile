@@ -1,5 +1,6 @@
 FROM openresty/openresty:1.19.3.1-7-buster
-MAINTAINER BlockApps Inc.
+
+LABEL org.opencontainers.image.authors="BlockApps Inc."
 
 ENV DEBIAN_FRONTEND=noninteractive
 

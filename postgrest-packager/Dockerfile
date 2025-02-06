@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER BlockApps Inc.
+LABEL org.opencontainers.image.authors="BlockApps Inc."
 
 ENV POSTGREST_VERSION=v12.0.0
 

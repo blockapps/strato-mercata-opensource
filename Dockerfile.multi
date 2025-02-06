@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM ubuntu:22.04 AS base
 
 RUN apt-get -y update && apt-get install -y \
       autoconf \
@@ -36,7 +36,7 @@ ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
     LC_ALL="en_US.UTF-8"
 
-FROM base as strato
+FROM base AS strato
 COPY \
   ./usr/local/bin/blockapps-vault-proxy-server \
   ./usr/local/bin/ethereum-discover \
@@ -65,7 +65,7 @@ HEALTHCHECK --interval=5s --timeout=1s --start-period=20s \
 WORKDIR /var/lib/strato
 ENTRYPOINT ["/strato/doit.sh"]
 
-FROM base as highway
+FROM base AS highway
 COPY usr/local/bin/blockapps-highway-server /usr/local/bin/
 COPY ./highway /highway
 EXPOSE 8080
@@ -74,7 +74,7 @@ HEALTHCHECK --interval=5s --timeout=1s --start-period=180s \
 ENTRYPOINT ["/highway/doit.sh"]
 
 
-FROM base as vault-wrapper
+FROM base AS vault-wrapper
 COPY usr/local/bin/blockapps-vault-wrapper-server /usr/local/bin/
 COPY ./vault-wrapper /vault-wrapper
 EXPOSE 8000
@@ -82,7 +82,7 @@ HEALTHCHECK --interval=5s --timeout=1s --start-period=180s \
   CMD curl --silent --output /dev/null --fail localhost:8000/strato/v2.3/_ping || exit 1
 ENTRYPOINT ["/vault-wrapper/doit.sh"]
 
-FROM base as identity-provider
+FROM base AS identity-provider
 COPY \
   usr/local/bin/identity-provider-server \
   usr/local/bin/blockapps-vault-proxy-server \
