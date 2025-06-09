@@ -1,0 +1,121 @@
+resolver: lts-22.4
+
+packages:
+- api/bloc/bloc2
+- api/bloc/bloc2api
+- api/bloc/bloc2client
+- api/core
+- api/strato-api
+
+- core/blockapps-data
+- core/blockapps-datadefs
+- core/blockapps-mpdbs
+- core/blockstanbul
+- core/ethereum-discovery
+- core/ethereum-encryption
+- core/fast-keccak256
+- core/fastMP
+- core/merkle-patricia-db
+- core/miner-ethash
+- core/seqevents
+- core/strato-conf
+- core/strato-genesis
+- core/strato-init
+- core/strato-model
+- core/strato-networks
+- core/strato-p2p
+- core/strato-redis-blockdb
+- core/strato-sequencer
+- core/strato-statediff
+- core/vm-runner/
+- core/vm-tools/
+
+- highway/api
+- highway/client
+# - highway/server
+
+- identity-provider/api
+- identity-provider/server
+- identity-provider/client
+
+- indexer/slipstream
+- indexer/strato-index
+
+- libs/blockapps-haskoin/
+- libs/bloomfilter/
+
+- libs/clockwork
+- libs/common-log
+- libs/composable-monads/composable-monads-base
+- libs/composable-monads/kafka-monad
+- libs/composable-monads/redis-monad
+- libs/composable-monads/sql-monad
+- libs/composable-monads/identity-monad
+- libs/composable-monads/notification-monad
+- libs/composable-monads/vault-monad
+- libs/ethereum-rlp
+- libs/format
+- libs/json-rpc-server
+- libs/json-rpc-client
+- libs/labeled-error
+- libs/kafka/milena
+- libs/kafka/milena-tools
+- libs/monad-alter
+- libs/nibblestring
+- libs/partitioner
+- libs/prometheus/blockapps-init
+- libs/prometheus/cross-monitoring
+- libs/secp256k1-haskell
+- libs/type-lits
+
+- tools/blockapps-tools
+# - tools/debugger-tools
+- tools/process-monitor
+- tools/x509-tools
+
+- vault/api
+- vault/client
+- vault/server
+- vault-proxy/api
+- vault-proxy/server
+
+- VM/EVM/ethereum-vm
+- VM/EVM/evm-solidity
+- VM/SolidVM/debugger
+- VM/SolidVM/solid-vm
+- VM/SolidVM/solid-vm-compiler
+- VM/SolidVM/solid-vm-fuzzer
+- VM/SolidVM/solid-vm-model
+- VM/SolidVM/solid-vm-parser
+- VM/SolidVM/solid-vm-static-analysis
+- VM/SolidVM/source-tools
+- VM/vrun
+
+extra-deps:
+- Crypto-4.2.5.2@sha256:5b1b4302dbb97ec66e0f03c49f49c382bf3cfeae9701e12871c5467f827a539b,4127
+- bitwise-1.0.0.1@sha256:74be2244a58860cae94ab1875e0bfdb4d9c3b35df46f783d01e7f886ff362d00,3111
+- bytestring-arbitrary-0.1.3@sha256:14db64d4fe126fbad2eb8d3601bfd80a693f3131e2db0e76891feffe44f10df8,1773
+- contra-tracer-0.2.0.0@sha256:7e1df39934fb0ecf4533196c819946455ec377fbc169b819be151906db244fc2,905
+- dom-lt-0.2.3@sha256:1df9402e21e97de0da74fdf2a9f8c96ab8a710c602eb6d22ac8e9c274db51090,1938
+- ghc-debug-client-0.7.0.0@sha256:dc8d845179433dd8510198dbb89cb3e20ae00a6f628e760086e161cb76cc937d,2975
+- ghc-debug-common-0.7.0.0@sha256:d822a380f0e26820e382b8745d29d6aee65c6ea66db18ea17ea65248077168a5,1845
+- ghc-debug-convention-0.7.0.0@sha256:1ad94e857fb66eda7075bb3fd7a20230dd5aed1de91149769ce988f967acc11a,635
+- global-lock-0.1@sha256:b7affe140763f53f17fd9c937dfe9b8023c7d209216fb3793933957e49a7446f,1327
+- hflags-0.4.3@sha256:f6b85fc7cbd170787f49225646e62d5589e5dd75abe6f26d16287e5fff3e678e,3121
+- lens-family-th-0.5.3.1@sha256:725700a89f26f790ee7d6630a4fa394ac0305ae8d2cff06c037ee47cb3499654,1700
+- semver-range-0.2.8@sha256:44918080c220cf67b6e7c8ad16f01f3cfe1ac69d4f72e528e84d566348bb23c3,1941
+- servant-options-0.1.0.0@sha256:39f50166a68006250e79370372f553ca476f14d06d93fa0c401050253aeba803,914
+
+
+flags:
+  secp256k1-haskell:
+    ecdh: true
+    recovery: true
+
+nix:
+  packages: [ pkg-config postgresql zlib leveldb secp256k1 libsodium xz ]
+
+allow-newer: true
+
+ghc-options:
+  "$locals": -Wall -Werror -fwarn-redundant-constraints
