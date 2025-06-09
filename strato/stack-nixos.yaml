@@ -32,7 +32,7 @@ packages:
 
 - highway/api
 - highway/client
-# - highway/server
+- highway/server
 
 - identity-provider/api
 - identity-provider/server
@@ -106,6 +106,7 @@ extra-deps:
 - semver-range-0.2.8@sha256:44918080c220cf67b6e7c8ad16f01f3cfe1ac69d4f72e528e84d566348bb23c3,1941
 - servant-options-0.1.0.0@sha256:39f50166a68006250e79370372f553ca476f14d06d93fa0c401050253aeba803,914
 
+- wai-extra-3.1.15 # required for blockapps-highway-server which depends on RequestParseException from Network.Wai.Parse
 
 flags:
   secp256k1-haskell:
