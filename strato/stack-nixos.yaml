@@ -69,7 +69,7 @@ packages:
 - libs/type-lits
 
 - tools/blockapps-tools
-# - tools/debugger-tools
+- tools/debugger-tools
 - tools/process-monitor
 - tools/x509-tools
 
@@ -97,16 +97,19 @@ extra-deps:
 - bytestring-arbitrary-0.1.3@sha256:14db64d4fe126fbad2eb8d3601bfd80a693f3131e2db0e76891feffe44f10df8,1773
 - contra-tracer-0.2.0.0@sha256:7e1df39934fb0ecf4533196c819946455ec377fbc169b819be151906db244fc2,905
 - dom-lt-0.2.3@sha256:1df9402e21e97de0da74fdf2a9f8c96ab8a710c602eb6d22ac8e9c274db51090,1938
-- ghc-debug-client-0.7.0.0@sha256:dc8d845179433dd8510198dbb89cb3e20ae00a6f628e760086e161cb76cc937d,2975
-- ghc-debug-common-0.7.0.0@sha256:d822a380f0e26820e382b8745d29d6aee65c6ea66db18ea17ea65248077168a5,1845
-- ghc-debug-convention-0.7.0.0@sha256:1ad94e857fb66eda7075bb3fd7a20230dd5aed1de91149769ce988f967acc11a,635
 - global-lock-0.1@sha256:b7affe140763f53f17fd9c937dfe9b8023c7d209216fb3793933957e49a7446f,1327
 - hflags-0.4.3@sha256:f6b85fc7cbd170787f49225646e62d5589e5dd75abe6f26d16287e5fff3e678e,3121
 - lens-family-th-0.5.3.1@sha256:725700a89f26f790ee7d6630a4fa394ac0305ae8d2cff06c037ee47cb3499654,1700
 - semver-range-0.2.8@sha256:44918080c220cf67b6e7c8ad16f01f3cfe1ac69d4f72e528e84d566348bb23c3,1941
 - servant-options-0.1.0.0@sha256:39f50166a68006250e79370372f553ca476f14d06d93fa0c401050253aeba803,914
 
-- wai-extra-3.1.15 # required for blockapps-highway-server which depends on RequestParseException from Network.Wai.Parse
+# RequestParseException is added to Network.Wai.Parse in wai-extra version 3.1.15
+- wai-extra-3.1.15
+
+# ghc-debug-client 0.6.0.0 has incompatible API changes
+- ghc-debug-client-0.5.0.0
+- ghc-debug-common-0.5.0.0@sha256:e0cc4a4c10f62ee862c759e8df8d37f9f081df984374034f11d3e7a6ee318bb3,2006
+- ghc-debug-convention-0.5.0.0@sha256:f87583cbe5ce6d6307d3b46aba682c35de3223ee0bbb14e211bdc81322cb9c32,628
 
 flags:
   secp256k1-haskell:
