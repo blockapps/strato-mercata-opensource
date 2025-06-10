@@ -22,6 +22,7 @@ executables:
       - lifted-async
       - ordered-containers
       - process-monitor
+      - strato-conf
       - strato-model
       - strato-p2p
       - vm-tools

@@ -4,6 +4,8 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
+import           System.Environment
+import           Data.Maybe
 import           Control.Monad.IO.Class
 import           Control.Concurrent.Async.Lifted.Safe
 import           Blockchain.VMOptions       ()
@@ -13,6 +15,7 @@ import           HFlags
 import           Network.Wai.Handler.Warp
 import           Network.Wai.Middleware.Prometheus
 
+import           Blockchain.EthConf
 import           Blockchain.Context
 import           Blockchain.Options
 import           Blockchain.Strato.Model.Options()
@@ -33,6 +36,7 @@ main = runLoggingT initP2P
 
 initP2P :: LoggingT IO ()
 initP2P = labelTheThread "initP2P" $ do
+  liftIO $ maybe (return ()) setEthConfFrom . listToMaybe =<< getArgs
   liftIO $ blockappsInit "strato_p2p"
   liftIO $ runInstrumentation "strato-p2p"
   liftIO $ resetPeers
