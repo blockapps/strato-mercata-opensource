@@ -4,6 +4,7 @@
 module Blockchain.EthConf
   (
     ethConf,
+    setEthConfFrom,
     connStr,
     lookupRedisBlockDBConfig,
     cirrusConnStr,
@@ -15,6 +16,7 @@ where
 import Blockchain.EthConf.Model
 import Control.Monad.Composable.Kafka
 import Control.Monad.IO.Class
+import Control.Concurrent
 import qualified Data.ByteString as B
 import Data.String
 import Data.Yaml
@@ -26,10 +28,30 @@ import System.IO.Unsafe
 -- noinline cause its not like we had any guarantee of whether or not the file
 -- got re-read anyway
 {-# NOINLINE ethConf #-}
+ethConfMVar :: MVar EthConf
+ethConfMVar = unsafePerformIO newEmptyMVar
+
 ethConf :: EthConf
 ethConf = unsafePerformIO $ do
-  contents <- B.readFile ".ethereumH/ethconf.yaml"
+  isEmpty <- isEmptyMVar ethConfMVar
+  if isEmpty
+    then do
+    putStrLn "ethConf: Filling with default"
+    ethConf_ <- readEthConf ".ethereumH/ethconf.yaml"
+    tryPutMVar ethConfMVar ethConf_ >> return ethConf_
+    else do
+    putStrLn "ethConf: Filled"
+    readMVar ethConfMVar
+
+readEthConf :: FilePath -> IO EthConf
+readEthConf path_ = do
+  contents <- B.readFile path_
   return $ (either (error . show) id . decodeEither') contents
+
+-- | Convenience function to set path to @EthConf@ from command line
+-- argmunts returned by @getArgs@.
+setEthConfFrom :: FilePath -> IO ()
+setEthConfFrom path_ = putMVar ethConfMVar =<< readEthConf path_
 
 {- CONFIG: clobber connection string -}
 
