@@ -1,39 +1,24 @@
-[*]
-charset=utf-8
-end_of_line=lf
-insert_final_newline=false
-indent_style=space
-indent_size=4
+root = true
 
-[{composer.lock,.babelrc,.stylelintrc,.eslintrc,jest.config,*.json,*.jsb3,*.jsb2,*.bowerrc}]
-indent_style=space
-indent_size=2
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.{ts,js,json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
 
 [*.sol]
-indent_style=space
-indent_size=2
+indent_style = space
+indent_size = 2
 
-[{zzz,*.applejs,*.js}]
-indent_style=space
-indent_size=2
-
-[*.js.flow]
-indent_style=space
-indent_size=2
-
-[{tsconfig.spec.json,tsconfig.app.json,tsconfig.json,tsconfig.e2e.json}]
-indent_style=space
-indent_size=2
-
-[*.js.map]
-indent_style=space
-indent_size=2
-
-[{*.yml,*.yaml}]
-indent_style=space
-indent_size=2
-
-[yarn.lock]
-indent_style=space
-indent_size=2
+[Makefile]
+indent_style = tab
 
