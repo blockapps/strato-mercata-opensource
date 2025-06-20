@@ -1,8 +1,8 @@
 /* eslint-disable dot-notation */
 import { assert } from 'chai'
-import solidityParser from '../solidityParser'
-import util from '../util'
-import fsUtil from '../fsUtil'
+import solidityParser from '../solidityParser.js'
+import util from '../util.js'
+import fsUtil from '../fsUtil.js'
 
 describe('solidity parser', () => {
   describe('enum', () => {

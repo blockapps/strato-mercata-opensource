@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv'
-import oauthUtil from '../oauth.util'
-import fsUtil from '../fsUtil'
-import util from '../util'
+import oauthUtil from '../oauth.util.js'
+import fsUtil from '../fsUtil.js'
+import util from '../util.js'
 import { assert } from 'chai'
-import { Options } from '../../types';
+import { Options } from '../../types.js';
 
 const loadEnv = dotenv.config()
 assert.isUndefined(loadEnv.error)

@@ -1,7 +1,6 @@
+import { OAuthConfig } from "./util/oauth.util.js";
 
-import { OAuthConfig } from "./util/oauth.util";
-
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 
 interface Options {
   config: Config,
@@ -14,7 +13,7 @@ interface Options {
   isDetailed?: boolean,
   stateQuery?: any,
   query?: any,
-  logger?:Console,
+  logger?: typeof console,
   history?:any,
   doNotResolve?:boolean
 }

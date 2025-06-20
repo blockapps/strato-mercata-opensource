@@ -1,9 +1,9 @@
-import rest from "../rest";
-import util from "../util/util";
-import fsUtil from "../util/fsUtil";
-import assert from "../util/assert";
-import BigNumber from "bignumber.js";
-import { Options, SendTx } from "../types"
+import rest from "../rest.js";
+import util from "../util/util.js";
+import fsUtil from "../util/fsUtil.js";
+import assert from "../util/assert.js";
+import { BigNumber } from "bignumber.js";
+import { Options, SendTx } from "../types.js";
 
 import * as ip from "ip";
 

@@ -1,8 +1,8 @@
 import * as RestStatus from "http-status-codes";
 import * as queryString from "query-string";
-import ax from "../axios-wrapper";
-import { RestError } from "./rest.util";
-import { Options, OAuthUser } from "../types";
+import ax from "../axios-wrapper.js";
+import { RestError } from "./rest.util.js";
+import { Options, OAuthUser } from "../types.js";
 
 const apexUrl = "/apex-api";
 const blocUrl = "/bloc/v2.2";

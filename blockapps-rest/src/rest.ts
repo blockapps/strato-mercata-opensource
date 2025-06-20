@@ -1,9 +1,9 @@
 import * as RestStatus from "http-status-codes";
-import api from "./api";
-import { TxResultStatus } from "./constants";
-import util from "./util/util";
-import { constructMetadata, setAuthHeaders } from "./util/api.util";
-import { RestError, response } from "./util/rest.util";
+import api from "./api.js";
+import { TxResultStatus } from "./constants.js";
+import util from "./util/util.js";
+import { constructMetadata, setAuthHeaders } from "./util/api.util.js";
+import { RestError, response } from "./util/rest.util.js";
 import {
   Options,
   OAuthUser,
@@ -13,7 +13,7 @@ import {
   TransactionResultHash,
   CallArgs,
   SendTx
-} from "./types";
+} from "./types.js";
 
 /**
  * This is the main blockapps-rest interface.

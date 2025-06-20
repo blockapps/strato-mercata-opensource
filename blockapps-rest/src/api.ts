@@ -11,8 +11,8 @@ import {
   httpDelete,
   getNodeUrl,
   setAuthHeaders
-} from "./util/api.util";
-import { TxPayloadType } from "./constants";
+} from "./util/api.util.js";
+import { TxPayloadType } from "./constants.js";
 import {
   Options,
   OAuthUser,
@@ -21,7 +21,7 @@ import {
   ContractDefinition,
   CallArgs,
   SendTx
-} from "./types";
+} from "./types.js";
 
 
 function getCreateArgs(contract:ContractDefinition, options:Options) {

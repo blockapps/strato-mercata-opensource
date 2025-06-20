@@ -5,7 +5,7 @@ import * as unixTime from "unix-time";
 import * as getPem from "rsa-pem-from-mod-exp";
 import axios from "axios";
 import "@babel/polyfill";
-import { OAuthUser } from "../types";
+import { OAuthUser } from "../types.js";
 
 interface OAuthConfig {
   appTokenCookieName:any,
@@ -82,33 +82,30 @@ class OAuthUtil {
    * @method{getOpenIdConfig}
    */
   async getOpenIdConfig() {
-    try {
-      const discoveryClient = axios.create({
-        baseURL: this.openIdDiscoveryUrl,
+
+    const discoveryClient = axios.default.create({
+      baseURL: this.openIdDiscoveryUrl,
+      withCredentials: false
+    });
+    const response = await discoveryClient
+          .get("/")
+          .then((res: any) => res.data)
+    this.openIdConfig = response;
+    this.jwtAlgorithm = this.openIdConfig.id_token_signing_alg_values_supported;
+    this.issuer = this.openIdConfig.issuer;
+    this.logOutUrl = this.openIdConfig.end_session_endpoint;
+
+    if (this.openIdConfig.jwks_uri) {
+      const jwksClient = axios.default.create({
+        baseURL: this.openIdConfig.jwks_uri,
         withCredentials: false
       });
-      const response = await discoveryClient
-            .get("/")
-            .then((res: any) => res.data)
-      this.openIdConfig = response;
-      this.jwtAlgorithm = this.openIdConfig.id_token_signing_alg_values_supported;
-      this.issuer = this.openIdConfig.issuer;
-      this.logOutUrl = this.openIdConfig.end_session_endpoint;
-
-      if (this.openIdConfig.jwks_uri) {
-        const jwksClient = axios.create({
-          baseURL: this.openIdConfig.jwks_uri,
-          withCredentials: false
-        });
-        const keyResponse = await jwksClient
-            .get("/")
-            .then((res: any) => res.data)
-        this.keys = keyResponse.keys;
-      }
-    } catch (error) {
-      throw error;
+      const keyResponse = await jwksClient
+          .get("/")
+          .then((res: any) => res.data)
+      this.keys = keyResponse.keys;
     }
-  }
+    }
 
   /**
    * This function creates a new instance of OauthUtil and populates the relevant fields

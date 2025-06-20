@@ -1,7 +1,7 @@
-import * as commander from "commander";
+import commander from "commander";
 import * as fs from "fs";
-import fsUtil from "./fsUtil";
-import oauthUtil from "./oauth.util";
+import fsUtil from "./fsUtil.js";
+import oauthUtil from "./oauth.util.js";
 import * as tcpPortUsed from "tcp-port-used";
 import * as http from "http";
 import * as https from "https";

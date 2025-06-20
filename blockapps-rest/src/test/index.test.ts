@@ -1,14 +1,14 @@
 import * as RestStatus from "http-status-codes";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 import * as dotenv from "dotenv";
-import rest from "../rest";
-import assert from "../util/assert";
-import util from "../util/util";
-import fsUtil from "../util/fsUtil";
-import factory from "./factory";
-import { Options, Contract, TransactionResultHash, OAuthUser } from "../types";
-import oauthUtil from "../util/oauth.util";
-import { AccessToken } from "../util/oauth.util";
+import rest from "../rest.js";
+import assert from "../util/assert.js";
+import util from "../util/util.js";
+import fsUtil from "../util/fsUtil.js";
+import factory from "./factory.js";
+import { Options, Contract, TransactionResultHash, OAuthUser } from "../types.js";
+import oauthUtil from "../util/oauth.util.js";
+import { AccessToken } from "../util/oauth.util.js";
 
 if (!process.env.USER_TOKEN) {
   const loadEnv = dotenv.config();

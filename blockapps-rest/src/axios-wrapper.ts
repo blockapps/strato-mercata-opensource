@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import * as queryString from 'query-string'
 const { stringify} = require('flatted/cjs');
-import { Options } from "./types";
+import { Options } from "./types.js";
 
-axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.default.defaults.headers.post['Content-Type'] = 'application/json'
 
 const urlencodedHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' }
 const nullLogger = { info: () => {}, debug: () => {}, error: () => {} }
@@ -29,7 +29,7 @@ async function get(host, endpoint, options:Options) {
   try {
     logger.debug('### axios GET')
     logger.debug(requestFormatter(request))
-    const response = await axios(request)
+    const response = await axios.default(request)
     logger.debug('### axios GET response')
     if (typeof(response.data) !== 'object') throw new Error("Call to Strato API did not return a JSON object:\n" + response.data);
     logger.debug(responseFormatter(response))
@@ -54,7 +54,7 @@ async function put(host, endpoint, body, options:Options) {
   try {
     logger.debug('### axios PUT')
     logger.debug(requestFormatter(request))
-    const response = await axios(request)
+    const response = await axios.default(request)
     logger.debug('### axios PUT response')
     logger.debug(responseFormatter(response))
     return options.getFullResponse ? response : response.data
@@ -78,7 +78,7 @@ async function post(host, endpoint, body, options:Options) {
   try {
     logger.debug('### axios POST')
     logger.debug(requestFormatter(request))
-    const response = await axios(request)
+    const response = await axios.default(request)
     logger.debug('### axios POST response')
     logger.debug(responseFormatter(response))
     return options.getFullResponse ? response : response.data
@@ -102,7 +102,7 @@ async function httpDelete(host, endpoint, body, options:Options) {
   try {
     logger.debug('### axios DELETE')
     logger.debug(requestFormatter(request))
-    const response = await axios(request)
+    const response = await axios.default(request)
     logger.debug('### axios DELETE response')
     logger.debug(responseFormatter(response))
     return options.getFullResponse ? response : response.data

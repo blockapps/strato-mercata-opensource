@@ -1,9 +1,9 @@
 import { assert } from "chai";
-import importer from "../importer";
-import rest from "../../rest";
-import util from "../util";
-import factory from "../../test/factory";
-import { Options, Contract, Config } from "../../types";
+import importer from "../importer.js";
+import rest from "../../rest.js";
+import util from "../util.js";
+import factory from "../../test/factory.js";
+import { Options, Contract, Config } from "../../types.js";
 
 const config:Config = <Config>factory.getTestConfig();
 const fixtures = `${util.cwd}/lib/util/test/fixtures/`;

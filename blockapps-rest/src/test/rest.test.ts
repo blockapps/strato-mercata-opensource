@@ -1,12 +1,12 @@
 import * as RestStatus from "http-status-codes";
-import rest from "../rest";
-import assert from "../util/assert";
-import util from "../util/util";
-import factory from "./factory";
-import { TxResultStatus } from "../constants";
-import { Options, OAuthUser } from "../types";
-import oauthUtil from "../util/oauth.util";
-import { AccessToken } from "../util/oauth.util";
+import rest from "../rest.js";
+import assert from "../util/assert.js";
+import util from "../util/util.js";
+import factory from "./factory.js";
+import { TxResultStatus } from "../constants.js";
+import { Options, OAuthUser } from "../types.js";
+import oauthUtil from "../util/oauth.util.js";
+import { AccessToken } from "../util/oauth.util.js";
 
 import dotenv from "dotenv";
 
@@ -236,7 +236,7 @@ describe("rest_7", function () {
       assert.isOk(verifyStatus, "results");
     });
 
-    xit("create contracts list - sync - VM: EVM", async () => {
+    it("create contracts list - sync - VM: EVM", async () => {
       const count = 4;
       const contracts = factory.createContractListArgs(count);
       // compile contracts
@@ -286,7 +286,7 @@ describe("rest_7", function () {
       assert.isOk(verifyContracts, "contracts");
     });
 
-    xit("create contract list - BAD_REQUEST 400 - EVM", async () => {
+    it("create contract list - BAD_REQUEST 400 - EVM", async () => {
       const count = 5;
       const contracts = factory.createContractListArgs(count);
 
