@@ -88,7 +88,7 @@ function constructQuery(options:Options) {
  */
 function constructMetadata(options:any, contractName) {
   const metadata:any = {};
-  if (options === {}) return metadata;
+  if (Object.keys(options).length === 0) return metadata;
 
   // history flag (default: off)
   metadata.history = "";
