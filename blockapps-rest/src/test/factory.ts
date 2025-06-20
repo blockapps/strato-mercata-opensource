@@ -96,7 +96,7 @@ function createSendTxArgs(toAddress, value = 10):SendTx {
 }
 
 function createSendTxArgsArr(toAddress, value = 10, count = 2) {
-  let sendTxs = [];
+  const sendTxs = [];
 
   for (let i = 0; i < count; i++) {
     sendTxs.push({ value: value + i, toAddress });

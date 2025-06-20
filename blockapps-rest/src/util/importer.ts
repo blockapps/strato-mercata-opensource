@@ -11,13 +11,13 @@ let nameStore = [];
 
 function getImportsTree(fullname) {
   let importFullnames = [];
-  let array = fs.readFileSync(fullname).toString().split('\n');
-  let parentPath = splitPath(fullname);
+  const array = fs.readFileSync(fullname).toString().split('\n');
+  const parentPath = splitPath(fullname);
   for (let i = 0; i < array.length; i++) {
-    let line = array[i];
+    const line = array[i];
     if (line.startsWith('import') && !line.includes("<")) {
-      let importName = getImportName(line);
-      let importFullname = parentPath + nodepath.sep + importName;
+      const importName = getImportName(line);
+      const importFullname = parentPath + nodepath.sep + importName;
       if (isImported(importFullname)) continue;
       importFullnames.push(importFullname);
       importFullnames = importFullnames.concat(getImportsTree(importFullname));
@@ -31,7 +31,7 @@ function getImportsTree(fullname) {
 // import {symbol1 as alias, symbol2} from "filename";
 // import "filename";
 function getImportName(line) {
-  let importName = line.split('"').slice(-2, -1)[0];
+  const importName = line.split('"').slice(-2, -1)[0];
   return importName;
 }
 
@@ -104,7 +104,7 @@ function readFileLinesToString(fullname, relativePath = undefined) {
   let buffer = '';
   isImported(fullname);
   //buffer += '// --- start: ' + fullname + '\n';
-  let array = fs.readFileSync(fullname).toString().split('\n');
+  const array = fs.readFileSync(fullname).toString().split('\n');
   for (let i = 0; i < array.length; i++) {
     let line = array[i];
     if (line.startsWith('import') && !line.includes("<")) {
@@ -146,7 +146,7 @@ function importFileToObject(fileMap, fullname, relativePath, line) {
   if (importName.indexOf('/') == 0) {
     return readFileLinesToObject(fileMap, nodepath.join(relativePath || cwd, importName), relativePath);
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return readFileLinesToObject(fileMap, nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -170,7 +170,7 @@ function importFileToArray(fileArray, fullname, relativePath, line) {
   if (importName.indexOf('/') == 0) {
     return readFileLinesToArray(fileArray, nodepath.join(relativePath || cwd, importName), relativePath);
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return readFileLinesToArray(fileArray, nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -196,7 +196,7 @@ function importFileToString(fullname, relativePath, line) {
   if (importName.indexOf('/') == 0) {
     return buffer + readFileLinesToString(nodepath.join(relativePath || cwd, importName), relativePath);
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return buffer + readFileLinesToString(nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -233,7 +233,7 @@ function isImported(fullname) {
 function splitPath(fullname) {
   let array = fullname.split(nodepath.sep);
   array = array.length <= 1 ? fullname.split('/') : array; // Windows fix
-  let path = array.slice(0, array.length - 1).join(nodepath.sep);
+  const path = array.slice(0, array.length - 1).join(nodepath.sep);
   return path;
 }
 

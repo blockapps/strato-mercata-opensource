@@ -122,7 +122,7 @@ function requestFormatter(_request) {
       request.headers.Authorization = headerString
     }
   }
-  let parsedRequest = request;
+  const parsedRequest = request;
   // if this is a contract - remove the source from the debug
   if (request.hasOwnProperty('data')) {
     if (request.data.hasOwnProperty('txs')) {
@@ -143,11 +143,11 @@ function requestFormatter(_request) {
 
 function responseFormatter(response) {
   // if this is a contract - remove the source from the debug
-  let parsedResponse = response
+  const parsedResponse = response
   const removedFields = ['src', 'bin', 'bin-runtime', 'xabi']
   if (response.hasOwnProperty('data') && Array.isArray(response.data)) {
     parsedResponse.data = response.data.map((el) => {
-      let newEl = el
+      const newEl = el
       if (el.hasOwnProperty('data') && el.data !== null && el.data !== undefined) {
         if (el.data.hasOwnProperty('contents')) {
           const contents = el.data.contents

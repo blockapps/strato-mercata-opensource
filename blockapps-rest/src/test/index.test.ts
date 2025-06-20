@@ -27,7 +27,7 @@ describe("contracts", function() {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs:OAuthUser = { token: accessToken.token.access_token };
     admin = await factory.createAdmin(userArgs, options);
   });
@@ -98,7 +98,7 @@ describe("state", function() {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs = { token: accessToken.token.access_token };
     admin = await factory.createAdmin(userArgs, options);
   });
@@ -197,7 +197,7 @@ describe("call", function() {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs = { token: accessToken.token.access_token };
     admin = await factory.createAdmin(userArgs, options);
   });
@@ -258,7 +258,7 @@ describe("auth user", function() {
 
   before(async () => {
     oauth = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     user = { token: accessToken.token.access_token };
   });
 
@@ -302,7 +302,7 @@ describe("auth user", function() {
   });
 
   it("createOrGetKey", async () => {
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const address = await rest.createOrGetKey(
       { token: accessToken.token.access_token },
       options
@@ -319,7 +319,7 @@ describe("history", function() {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs = { token: accessToken.token.access_token };
     admin = await factory.createAdmin(userArgs, options);
   });

@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation */
+ 
 import { assert } from 'chai'
 import solidityParser from '../solidityParser.js'
 import util from '../util.js'

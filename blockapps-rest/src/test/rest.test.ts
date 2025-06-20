@@ -27,7 +27,7 @@ describe("rest_7", function () {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs:OAuthUser = {token: accessToken.token.access_token};
     admin = await factory.createAdmin(userArgs, options);
   });
@@ -428,7 +428,7 @@ describe("search until", function () {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs:OAuthUser = {token: accessToken.token.access_token};
     admin = await factory.createAdmin(userArgs, options);
   });
@@ -501,7 +501,7 @@ describe("search query", function () {
 
   before(async () => {
     const oauth:oauthUtil = await oauthUtil.init(config.nodes[0].oauth);
-    let accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
+    const accessToken:AccessToken = await oauth.getAccessTokenByClientSecret();
     const userArgs:OAuthUser = {token: accessToken.token.access_token};
     admin = await factory.createAdmin(userArgs, options);
   });
