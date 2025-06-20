@@ -20,7 +20,7 @@
   "author": "support@blockapps.net",
   "license": "ISC",
   "engines": {
-    "node": ">= 10.1.0"
+    "node": ">= 22.16.0"
   },
   "dependencies": {
     "@types/simple-oauth2": "^2.2.1",
