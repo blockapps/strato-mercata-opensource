@@ -20,8 +20,8 @@
     "fix": "npm run lint:fix && npm run format",
     "type-check": "tsc --noEmit",
     "test": "yarn test:lib && yarn test:util",
-    "test:lib": "mocha --require=@babel/register lib/test/*.test.js -b",
-    "test:util": "mocha --require=@babel/register lib/util/test/*.test.js -b",
+    "test:lib": "mocha --require=@babel/register dist/cjs/test/*.test.js -b",
+    "test:util": "mocha --require=@babel/register dist/cjs/util/test/*.test.js -b",
     "token-getter": "ts-node --require=@babel/register src/util/oauth.client.ts"
   },
   "keywords": [
@@ -39,7 +39,7 @@
     "@types/simple-oauth2": "^2.2.1",
     "@types/tcp-port-used": "^1.0.0",
     "@babel/polyfill": "^7.8.3",
-    "axios": "^0.21.2",
+    "axios": "^1.10.0",
     "bignumber.js": "^9.0.0",
     "bluebird": "^3.4.6",
     "chai": "^4.2.0",

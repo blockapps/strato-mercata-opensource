@@ -79,7 +79,7 @@ class OAuthUtil {
    * @method{getOpenIdConfig}
    */
   async getOpenIdConfig() {
-    const discoveryClient = axios.default.create({
+    const discoveryClient = axios.create({
       baseURL: this.openIdDiscoveryUrl,
       withCredentials: false,
     });
@@ -90,7 +90,7 @@ class OAuthUtil {
     this.logOutUrl = this.openIdConfig.end_session_endpoint;
 
     if (this.openIdConfig.jwks_uri) {
-      const jwksClient = axios.default.create({
+      const jwksClient = axios.create({
         baseURL: this.openIdConfig.jwks_uri,
         withCredentials: false,
       });
