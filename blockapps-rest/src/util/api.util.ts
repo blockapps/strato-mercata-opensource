@@ -1,15 +1,15 @@
-import * as RestStatus from "http-status-codes";
-import * as queryString from "query-string";
-import ax from "../axios-wrapper.js";
-import { RestError } from "./rest.util.js";
-import { Options, OAuthUser } from "../types.js";
+import * as RestStatus from 'http-status-codes';
+import * as queryString from 'query-string';
+import ax from '../axios-wrapper.js';
+import { RestError } from './rest.util.js';
+import { Options, OAuthUser } from '../types.js';
 
-const apexUrl = "/apex-api";
-const blocUrl = "/bloc/v2.2";
-const strato12Url = "/strato-api/eth/v1.2";
-const strato23Url = "/strato/v2.3";
-const cirrusUrl = "/cirrus/search";
-const debugUrl = "/vm-debug";
+const apexUrl = '/apex-api';
+const blocUrl = '/bloc/v2.2';
+const strato12Url = '/strato-api/eth/v1.2';
+const strato23Url = '/strato/v2.3';
+const cirrusUrl = '/cirrus/search';
+const debugUrl = '/vm-debug';
 
 const Endpoint = {
   HEALTH: `/health`,
@@ -43,31 +43,29 @@ const Endpoint = {
   DEBUG_FUZZ: `${debugUrl}/fuzz`,
 };
 
-function constructEndpoint(endpointTemplate, options:Options, params = {}) {
+function constructEndpoint(endpointTemplate, options: Options, params = {}) {
   // expand template
   const endpoint = Object.getOwnPropertyNames(params).reduce((acc, key) => {
     return acc.replace(`:${key}`, encodeURIComponent(params[key]));
   }, endpointTemplate);
   // concat query patameters
   const query =
-    endpointTemplate === Endpoint.SEARCH
-      ? constructQuerySearch(options)
-      : constructQuery(options);
+    endpointTemplate === Endpoint.SEARCH ? constructQuerySearch(options) : constructQuery(options);
   return `${endpoint}${query}`;
 }
 
-function constructQuerySearch(options:Options) {
+function constructQuerySearch(options: Options) {
   if (options === undefined) {
-    return "";
+    return '';
   }
 
   const query = `?${queryString.stringify(options.query)}`;
   return query;
 }
 
-function constructQuery(options:Options) {
+function constructQuery(options: Options) {
   if (options === undefined) {
-    return "";
+    return '';
   }
   const queryObject = Object.assign(
     {},
@@ -86,49 +84,41 @@ function constructQuery(options:Options) {
  * @param{String} contractName
  * @returns{()} metadata
  */
-function constructMetadata(options:any, contractName) {
-  const metadata:any = {};
+function constructMetadata(options: any, contractName) {
+  const metadata: any = {};
   if (Object.keys(options).length === 0) return metadata;
 
   // history flag (default: off)
-  metadata.history = "";
+  metadata.history = '';
   if (options.enableHistory) {
     metadata.history = contractName;
   }
-  if (options.hasOwnProperty("history")) {
+  if (options.hasOwnProperty('history')) {
     if (Array.isArray(options.history)) {
       metadata.history =
-        metadata.history.length === 0 ||
-        options.history.indexOf(metadata.history) >= 0
-          ? options.history.join(",")
-          : `${metadata.history},${options.history.join(",")}`;
+        metadata.history.length === 0 || options.history.indexOf(metadata.history) >= 0
+          ? options.history.join(',')
+          : `${metadata.history},${options.history.join(',')}`;
     } else if (typeof options.history === 'string') {
       metadata.history =
-        metadata.history.length === 0 ||
-        options.history.indexOf(metadata.history) >= 0
+        metadata.history.length === 0 || options.history.indexOf(metadata.history) >= 0
           ? options.history
           : `${metadata.history},${options.history}`;
     }
   }
 
   // index flag (default: on)
-  if (options.hasOwnProperty("enableIndex") && !options.enableIndex) {
+  if (options.hasOwnProperty('enableIndex') && !options.enableIndex) {
     metadata.noindex = contractName;
   }
-  if (options.hasOwnProperty("noindex")) {
-    const newContracts = options.noindex
-      .filter(contract => contract !== contractName)
-      .join();
+  if (options.hasOwnProperty('noindex')) {
+    const newContracts = options.noindex.filter(contract => contract !== contractName).join();
     metadata.noindex = `${options.noindex},${newContracts}`;
   }
   // VM
-  if (options.config.hasOwnProperty("VM")) {
-    if (!["EVM", "SolidVM"].includes(options.config.VM)) {
-      throw new RestError(
-        RestStatus.BAD_REQUEST,
-        `Illegal VM type ${options.VM}`,
-        { options }
-      );
+  if (options.config.hasOwnProperty('VM')) {
+    if (!['EVM', 'SolidVM'].includes(options.config.VM)) {
+      throw new RestError(RestStatus.BAD_REQUEST, `Illegal VM type ${options.VM}`, { options });
     }
     metadata.VM = options.config.VM;
   }
@@ -139,10 +129,10 @@ function constructMetadata(options:any, contractName) {
   return metadata;
 }
 
-function setAuthHeaders(user, _options:Options) {
+function setAuthHeaders(user, _options: Options) {
   const options = Object.assign({}, _options);
   options.headers = Object.assign({}, _options.headers, {
-    Authorization: `Bearer ${user.token}`
+    Authorization: `Bearer ${user.token}`,
   });
   return options;
 }
@@ -150,13 +140,13 @@ function setAuthHeaders(user, _options:Options) {
 /*
   get the url for the node by node id#
  */
-function getNodeUrl(options:Options) {
+function getNodeUrl(options: Options) {
   const nodeId = options.node || 0;
   const nodeObject = options.config.nodes[nodeId];
   return nodeObject.url;
 }
 
-async function post(url, endpoint, _body, options:Options) {
+async function post(url, endpoint, _body, options: Options) {
   function createBody(_body, options) {
     // array
     if (Array.isArray(_body)) return _body;
@@ -177,25 +167,25 @@ async function post(url, endpoint, _body, options:Options) {
   return ax.post(url, endpoint, body, options);
 }
 
-async function postRaw(url, endpoint, body, options:Options) {
+async function postRaw(url, endpoint, body, options: Options) {
   return ax.post(url, endpoint, body, options);
 }
 
-async function get(host, endpoint, options:Options) {
+async function get(host, endpoint, options: Options) {
   return ax.get(host, endpoint, options);
 }
 
-async function put(host, endpoint, data, options:Options) {
+async function put(host, endpoint, data, options: Options) {
   // TODO - @samrit do we need txParams here
   return ax.put(host, endpoint, data, options);
 }
 
-async function postue(host, endpoint, data, options:Options) {
+async function postue(host, endpoint, data, options: Options) {
   // TODO - @samrit do we need txParams here
   return ax.postue(host, endpoint, data, options);
 }
 
-async function httpDelete(host, endpoint, data, options:Options) {
+async function httpDelete(host, endpoint, data, options: Options) {
   // TODO - @samrit do we need txParams here
   return ax.httpDelete(host, endpoint, data, options);
 }
@@ -211,5 +201,5 @@ export {
   postRaw,
   postue,
   httpDelete,
-  setAuthHeaders
+  setAuthHeaders,
 };

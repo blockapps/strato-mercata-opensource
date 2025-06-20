@@ -1,79 +1,76 @@
-import * as jwt from "jsonwebtoken";
-import * as simpleOauth from "simple-oauth2";
-import { OAuthClient, AccessToken } from "simple-oauth2";
-import * as unixTime from "unix-time";
-import * as getPem from "rsa-pem-from-mod-exp";
-import axios from "axios";
-import "@babel/polyfill";
-import { OAuthUser } from "../types.js";
+import * as jwt from 'jsonwebtoken';
+import * as simpleOauth from 'simple-oauth2';
+import { OAuthClient, AccessToken } from 'simple-oauth2';
+import * as unixTime from 'unix-time';
+import * as getPem from 'rsa-pem-from-mod-exp';
+import axios from 'axios';
+import '@babel/polyfill';
+import { OAuthUser } from '../types.js';
 
 interface OAuthConfig {
-  appTokenCookieName:any,
-  appTokenCookieMaxAge:any,
-  clientId:any,
-  clientSecret:any,
-  logoutRedirectUri:any,
-  openIdDiscoveryUrl:any,
-  redirectUri:any,
-  scope:any,
-  serviceUsername?:any,
-  servicePassword?:any,
-  tokenField?:any,
-  tokenLifetimeReserveSeconds?: number,
-  }
+  appTokenCookieName: any;
+  appTokenCookieMaxAge: any;
+  clientId: any;
+  clientSecret: any;
+  logoutRedirectUri: any;
+  openIdDiscoveryUrl: any;
+  redirectUri: any;
+  scope: any;
+  serviceUsername?: any;
+  servicePassword?: any;
+  tokenField?: any;
+  tokenLifetimeReserveSeconds?: number;
+}
 
 /** Class representing the OAuth util. */
 
 class OAuthUtil {
-  appTokenCookieName : any;
-  appTokenExpirationCookieName : any;
-  appTokenCookieMaxAge : any;
-  refreshTokenCookieName : any;
-  clientId : any;
-  clientSecret : any;
-  redirectUri : any;
-  openIdDiscoveryUrl : any;
-  logoutRedirectUri : any;
-  scope : any;
-  openIdConfig : any;
-  jwtAlgorithm : any;
-  issuer : any;
-  logOutUrl : any;
-  keys : any[];
-  tokenField : any;
+  appTokenCookieName: any;
+  appTokenExpirationCookieName: any;
+  appTokenCookieMaxAge: any;
+  refreshTokenCookieName: any;
+  clientId: any;
+  clientSecret: any;
+  redirectUri: any;
+  openIdDiscoveryUrl: any;
+  logoutRedirectUri: any;
+  scope: any;
+  openIdConfig: any;
+  jwtAlgorithm: any;
+  issuer: any;
+  logOutUrl: any;
+  keys: any[];
+  tokenField: any;
   tokenLifetimeReserveSeconds: number;
-  serviceUsername : any;
-  servicePassword : any;
-  tokenHost : any;
-  oauth2 : OAuthClient<"client_id">;
+  serviceUsername: any;
+  servicePassword: any;
+  tokenHost: any;
+  oauth2: OAuthClient<'client_id'>;
 
-  constructor(oauthConfig:OAuthConfig) {
+  constructor(oauthConfig: OAuthConfig) {
     this.appTokenCookieName = oauthConfig.appTokenCookieName;
-    this.appTokenExpirationCookieName =
-      oauthConfig.appTokenCookieName + "_expiry";
+    this.appTokenExpirationCookieName = oauthConfig.appTokenCookieName + '_expiry';
     this.appTokenCookieMaxAge = oauthConfig.appTokenCookieMaxAge;
-    this.refreshTokenCookieName = oauthConfig.appTokenCookieName + "_refresh";
+    this.refreshTokenCookieName = oauthConfig.appTokenCookieName + '_refresh';
     this.clientId = oauthConfig.clientId;
     this.clientSecret = oauthConfig.clientSecret;
     this.redirectUri = oauthConfig.redirectUri;
     this.openIdDiscoveryUrl = oauthConfig.openIdDiscoveryUrl;
     this.logoutRedirectUri = oauthConfig.logoutRedirectUri;
-    this.scope = oauthConfig.scope || "email openid";
+    this.scope = oauthConfig.scope || 'email openid';
     this.openIdConfig;
     this.jwtAlgorithm;
     this.issuer;
     this.logOutUrl;
     this.keys = [];
-    this.tokenField = oauthConfig.tokenField
-      ? oauthConfig.tokenField
-      : "access_token"; //could use id_token
+    this.tokenField = oauthConfig.tokenField ? oauthConfig.tokenField : 'access_token'; //could use id_token
     this.tokenLifetimeReserveSeconds = oauthConfig.tokenLifetimeReserveSeconds
       ? oauthConfig.tokenLifetimeReserveSeconds
       : 60;
     this.serviceUsername = oauthConfig.serviceUsername;
     this.servicePassword = oauthConfig.servicePassword;
-    const url_split = this.openIdDiscoveryUrl.split("/");
-    this.tokenHost = url_split[0] + "//" + url_split[2];
+    const url_split = this.openIdDiscoveryUrl.split('/');
+    this.tokenHost = url_split[0] + '//' + url_split[2];
   }
 
   /**
@@ -82,14 +79,11 @@ class OAuthUtil {
    * @method{getOpenIdConfig}
    */
   async getOpenIdConfig() {
-
     const discoveryClient = axios.default.create({
       baseURL: this.openIdDiscoveryUrl,
-      withCredentials: false
+      withCredentials: false,
     });
-    const response = await discoveryClient
-          .get("/")
-          .then((res: any) => res.data)
+    const response = await discoveryClient.get('/').then((res: any) => res.data);
     this.openIdConfig = response;
     this.jwtAlgorithm = this.openIdConfig.id_token_signing_alg_values_supported;
     this.issuer = this.openIdConfig.issuer;
@@ -98,14 +92,12 @@ class OAuthUtil {
     if (this.openIdConfig.jwks_uri) {
       const jwksClient = axios.default.create({
         baseURL: this.openIdConfig.jwks_uri,
-        withCredentials: false
+        withCredentials: false,
       });
-      const keyResponse = await jwksClient
-          .get("/")
-          .then((res: any) => res.data)
+      const keyResponse = await jwksClient.get('/').then((res: any) => res.data);
       this.keys = keyResponse.keys;
     }
-    }
+  }
 
   /**
    * This function creates a new instance of OauthUtil and populates the relevant fields
@@ -113,7 +105,7 @@ class OAuthUtil {
    * @param oauthConfig
    * @returns o an instance of the OAuthUtil
    */
-  static async init(oauthConfig:OAuthConfig) {
+  static async init(oauthConfig: OAuthConfig) {
     try {
       const o = new OAuthUtil(oauthConfig);
       await o.getOpenIdConfig();
@@ -122,13 +114,13 @@ class OAuthUtil {
       const credentials = {
         client: {
           id: o.clientId,
-          secret: o.clientSecret
+          secret: o.clientSecret,
         },
         auth: {
           tokenHost: o.tokenHost,
           tokenPath: o.openIdConfig.token_endpoint,
-          authorizePath: o.openIdConfig.authorization_endpoint
-        }
+          authorizePath: o.openIdConfig.authorization_endpoint,
+        },
       };
 
       o.oauth2 = simpleOauth.create(credentials);
@@ -149,7 +141,7 @@ class OAuthUtil {
     const authorizationUri = this.oauth2.authorizationCode.authorizeURL({
       redirect_uri: this.redirectUri,
       scope: this.scope,
-      state: state || ""
+      state: state || '',
     });
 
     return authorizationUri;
@@ -165,7 +157,7 @@ class OAuthUtil {
     const tokenConfig = {
       code: authCode,
       redirect_uri: this.redirectUri,
-      scope: this.scope
+      scope: this.scope,
     };
 
     const result = await this.oauth2.authorizationCode.getToken(tokenConfig);
@@ -186,23 +178,23 @@ class OAuthUtil {
     clientId = undefined,
     clientSecret = undefined,
     scope = undefined
-  ):Promise<AccessToken> {
+  ): Promise<AccessToken> {
     const tokenConfig = {
-      scope: scope || this.scope
+      scope: scope || this.scope,
     };
 
-    let accessTokenResponse:AccessToken;
+    let accessTokenResponse: AccessToken;
     if (clientId && clientSecret) {
       const credentials = {
         client: {
           id: clientId,
-          secret: clientSecret
+          secret: clientSecret,
         },
         auth: {
           tokenHost: this.tokenHost,
           tokenPath: this.openIdConfig.token_endpoint,
-          authorizePath: this.openIdConfig.authorization_endpoint
-        }
+          authorizePath: this.openIdConfig.authorization_endpoint,
+        },
       };
 
       const altOAuth = simpleOauth.create(credentials);
@@ -223,11 +215,11 @@ class OAuthUtil {
    * @param {String} scope
    * @returns AccessTokenResponse
    */
-  async getAccessTokenByResourceOwnerCredential(username, password, scope?):Promise<AccessToken> {
+  async getAccessTokenByResourceOwnerCredential(username, password, scope?): Promise<AccessToken> {
     const tokenConfig = {
       username: username || this.serviceUsername,
       password: password || this.servicePassword,
-      scope: scope || this.scope
+      scope: scope || this.scope,
     };
 
     const result = await this.oauth2.ownerPassword.getToken(tokenConfig);
@@ -246,12 +238,10 @@ class OAuthUtil {
     const decoded = jwt.decode(accessToken, { complete: true });
     // FIX ME: Very azure specific
     switch (decoded.header.alg) {
-      case "RS256":
-        const key = this.keys.find(
-          k => k.kid == decoded.header.kid && k.x5t == decoded.header.x5t
-        );
+      case 'RS256':
+        const key = this.keys.find(k => k.kid == decoded.header.kid && k.x5t == decoded.header.x5t);
         try {
-          let pemKey = "";
+          let pemKey = '';
           // azure
           if (key.x5c) {
             pemKey = `-----BEGIN CERTIFICATE-----\n${key.x5c[0]}\n-----END CERTIFICATE-----`;
@@ -261,17 +251,17 @@ class OAuthUtil {
             pemKey = getPem(key.n, key.e);
           }
           const verified = jwt.verify(accessToken, pemKey, {
-            ignoreExpiration: false
+            ignoreExpiration: false,
           });
           return true;
         } catch (e) {
           console.log(e);
           return false;
         }
-      case "HS256":
+      case 'HS256':
         try {
           const verified = jwt.verify(accessToken, this.clientSecret, {
-            ignoreExpiration: false
+            ignoreExpiration: false,
           });
           return true;
         } catch (e) {
@@ -290,14 +280,14 @@ class OAuthUtil {
    * @returns {Boolean}
    */
   isTokenExpired(accessToken, cookieExpiry) {
-    let expiryTimestamp
+    let expiryTimestamp;
     if (!cookieExpiry) {
       const decodedToken = jwt.decode(accessToken);
-      expiryTimestamp = decodedToken["exp"];
+      expiryTimestamp = decodedToken['exp'];
     } else {
-      expiryTimestamp = cookieExpiry
+      expiryTimestamp = cookieExpiry;
     }
-    return expiryTimestamp <= (unixTime(new Date()) + this.tokenLifetimeReserveSeconds);
+    return expiryTimestamp <= unixTime(new Date()) + this.tokenLifetimeReserveSeconds;
   }
 
   /**
@@ -321,16 +311,16 @@ class OAuthUtil {
    */
   async validateAndGetNewToken(req, res) {
     try {
-      const accessToken = req["cookies"][this.appTokenCookieName]
-        ? req["cookies"][this.appTokenCookieName]
+      const accessToken = req['cookies'][this.appTokenCookieName]
+        ? req['cookies'][this.appTokenCookieName]
         : null;
-      if (!accessToken) throw new Error("Access Token not found");
+      if (!accessToken) throw new Error('Access Token not found');
 
-      const refreshToken = req["cookies"][this.refreshTokenCookieName]
-        ? req["cookies"][this.refreshTokenCookieName]
+      const refreshToken = req['cookies'][this.refreshTokenCookieName]
+        ? req['cookies'][this.refreshTokenCookieName]
         : null;
-      const expiryCookie = req["cookies"][this.appTokenExpirationCookieName]
-        ? req["cookies"][this.appTokenExpirationCookieName]
+      const expiryCookie = req['cookies'][this.appTokenExpirationCookieName]
+        ? req['cookies'][this.appTokenExpirationCookieName]
         : null;
 
       const expired = this.isTokenExpired(accessToken, expiryCookie);
@@ -342,43 +332,33 @@ class OAuthUtil {
       if (!refreshToken) {
         res.clearCookie(this.appTokenCookieName);
         res.clearCookie(this.appTokenExpirationCookieName);
-        throw new Error("Refresh Token not found");
+        throw new Error('Refresh Token not found');
       }
 
       const tokenObject = {
         access_token: accessToken,
-        refresh_token: refreshToken
+        refresh_token: refreshToken,
       };
 
       const tokenResponse = await this.refreshToken(tokenObject);
       // signature validation is done on STRATO node side by nginx
       const decoded = jwt.decode(tokenResponse.token[this.tokenField]);
 
-      req["cookies"][this.appTokenCookieName] =
-        tokenResponse.token[this.tokenField];
-      req["cookies"][this.appTokenExpirationCookieName] = decoded["exp"];
-      req["cookies"][this.refreshTokenCookieName] =
-        tokenResponse.token["refresh_token"];
-      res.cookie(
-        this.appTokenCookieName,
-        tokenResponse.token[this.tokenField],
-        {
-          maxAge: this.appTokenCookieMaxAge,
-          httpOnly: true
-        }
-      );
-      res.cookie(this.appTokenExpirationCookieName, decoded["exp"], {
+      req['cookies'][this.appTokenCookieName] = tokenResponse.token[this.tokenField];
+      req['cookies'][this.appTokenExpirationCookieName] = decoded['exp'];
+      req['cookies'][this.refreshTokenCookieName] = tokenResponse.token['refresh_token'];
+      res.cookie(this.appTokenCookieName, tokenResponse.token[this.tokenField], {
         maxAge: this.appTokenCookieMaxAge,
-        httpOnly: true
+        httpOnly: true,
       });
-      res.cookie(
-        this.refreshTokenCookieName,
-        tokenResponse.token["refresh_token"],
-        {
-          maxAge: this.appTokenCookieMaxAge,
-          httpOnly: true
-        }
-      );
+      res.cookie(this.appTokenExpirationCookieName, decoded['exp'], {
+        maxAge: this.appTokenCookieMaxAge,
+        httpOnly: true,
+      });
+      res.cookie(this.refreshTokenCookieName, tokenResponse.token['refresh_token'], {
+        maxAge: this.appTokenCookieMaxAge,
+        httpOnly: true,
+      });
 
       return;
     } catch (error) {

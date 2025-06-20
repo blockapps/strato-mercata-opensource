@@ -1,11 +1,11 @@
-import rest from "../rest.js";
-import util from "../util/util.js";
-import fsUtil from "../util/fsUtil.js";
-import assert from "../util/assert.js";
-import { BigNumber } from "bignumber.js";
-import { Options, SendTx } from "../types.js";
+import rest from '../rest.js';
+import util from '../util/util.js';
+import fsUtil from '../util/fsUtil.js';
+import assert from '../util/assert.js';
+import { BigNumber } from 'bignumber.js';
+import { Options, SendTx } from '../types.js';
 
-import * as ip from "ip";
+import * as ip from 'ip';
 
 const config = getTestConfig();
 const { publicKey, port } = config.nodes[0];
@@ -16,14 +16,10 @@ const balance = 100000000000000000000; // TODO express in ether
 
 function getTestConfig() {
   const config = fsUtil.getYaml(`${util.cwd}/lib/test/fixtures/config.yaml`);
-  assert.isDefined(config, "config should be defined");
-  assert.isDefined(config.nodes, "config.nodes should be defined");
-  assert.isArray(config.nodes, "config.nodes should be an array");
-  assert.isAbove(
-    config.nodes.length,
-    0,
-    "config.nodes should have at least one node"
-  );
+  assert.isDefined(config, 'config should be defined');
+  assert.isDefined(config.nodes, 'config.nodes should be defined');
+  assert.isArray(config.nodes, 'config.nodes should be an array');
+  assert.isAbove(config.nodes.length, 0, 'config.nodes should have at least one node');
   return config;
 }
 
@@ -34,7 +30,7 @@ function getTestFixtures() {
 /*
   users
  */
-async function createAdmin(_args, options:Options) {
+async function createAdmin(_args, options: Options) {
   return rest.createUser(_args, options);
 }
 
@@ -46,7 +42,7 @@ function createCompileContractsArgs(count) {
     const source = `contract ${name} { }`;
 
     return { name, source };
-  })
+  });
 
   return contracts;
 }
@@ -87,11 +83,11 @@ contract ${name} {
 
 async function createContractFromFile(filename, uid, constructorArgs = {}) {
   const name = `TestContract_${uid}`;
-  const source = fsUtil.get(filename).replace("TestContract", name);
+  const source = fsUtil.get(filename).replace('TestContract', name);
   return { name, source, args: util.usc(constructorArgs) }; // TODO flow contractArgs object
 }
 
-function createSendTxArgs(toAddress, value = 10):SendTx {
+function createSendTxArgs(toAddress, value = 10): SendTx {
   return { value, toAddress };
 }
 
@@ -105,12 +101,12 @@ function createSendTxArgsArr(toAddress, value = 10, count = 2) {
   return sendTxs;
 }
 
-function createCallArgs(contract, method, args = {}, value:BigNumber = new BigNumber(0)) {
+function createCallArgs(contract, method, args = {}, value: BigNumber = new BigNumber(0)) {
   return {
     contract,
     method,
     args: util.usc(args),
-    value
+    value,
   };
 }
 
@@ -137,5 +133,5 @@ export default {
   createCallListArgs,
   createCompileContractsArgs,
   getTestConfig,
-  getTestFixtures
+  getTestFixtures,
 };
