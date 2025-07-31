@@ -19,6 +19,7 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Short as Short
 import Prelude hiding (EQ, GT, LT)
+import Data.Bits (countLeadingZeros)
 
 --import Debug.Trace
 
@@ -66,6 +67,36 @@ powMod b e m =
     (_, _, False) ->
       b * (powMod b (e - 1) m) `mod` m
 
+modExpGas :: B.ByteString -> Gas
+modExpGas input =
+  let bSize = byteString2Integer $ B.take 32 input
+      eSize = byteString2Integer $ B.take 32 $ B.drop 32 input
+      mSize = byteString2Integer $ B.take 32 $ B.drop 64 input
+      eHead = B.take (min (fromInteger eSize) 32) $ B.drop (96 + fromInteger bSize) input
+      complexity = multComplexity (max mSize bSize)
+      adjustedESize = max (adjustExponentLength eSize eHead) 1
+   in Gas $ (complexity * adjustedESize) `div` (getGasValue gQUADDIVISOR)
+
+multComplexity :: Integer -> Integer
+multComplexity x = x + 32 -- TODO implement
+
+adjustExponentLength :: Integer -> B.ByteString -> Integer
+adjustExponentLength eSize eHead =
+  (if eSize > 32 then 8 * (eSize - 32) else 0) +
+  case (bitLen eHead) of
+    0 -> 0
+    x -> toInteger x - 1
+
+bitLen :: B.ByteString -> Int
+bitLen input =
+  case B.dropWhile (== 0) input of
+    rest | B.null rest -> 0
+         | otherwise   ->
+            let k  = B.length rest
+                b  = B.head rest :: Word8
+                lz = countLeadingZeros b
+            in (k - 1) * 8 + (8 - lz)
+
 callPrecompiledContract :: PrecompiledCode -> B.ByteString -> (Gas, B.ByteString)
 callPrecompiledContract NullContract _ = (0, B.empty)
 callPrecompiledContract ECRecover inputData =
@@ -85,5 +116,4 @@ callPrecompiledContract IdentityContract inputData = do
           + gIDENTITYWORD * (ceiling $ fromIntegral (B.length inputData) / (32 :: Double))
    in (gas, inputData)
 callPrecompiledContract ModExp inputData =
-  let gas = gECRECOVER -- ignore gas calc for now; use unrelated constant
-   in (gas, modExp inputData)
+  (modExpGas inputData, modExp inputData)
