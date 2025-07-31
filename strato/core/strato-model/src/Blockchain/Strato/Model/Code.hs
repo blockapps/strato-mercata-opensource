@@ -74,6 +74,7 @@ data PrecompiledCode
   | SHA256
   | RIPEMD160
   | IdentityContract
+  | ModExp -- 0x05 added in Byzantium
   deriving (Show, Eq, Enum, Bounded, Read, Ord, Generic, Data)
 
 precompiledCodeNumber :: PrecompiledCode -> Int

@@ -44,6 +44,17 @@ sha2 input =
   --    in
   SHA2.hash input
 
+-- Byzantium
+modExp :: B.ByteString -> B.ByteString
+modExp input = -- parse arguments
+  let bSize = fromInteger $ byteString2Integer $ B.take 32 input
+      eSize = fromInteger $ byteString2Integer $ B.take 32 $ B.drop 32 input
+      mSize = fromInteger $ byteString2Integer $ B.take 32 $ B.drop 64 input
+      b = byteString2Integer $ B.take bSize $ B.drop 96 input
+      e = byteString2Integer $ B.take eSize $ B.drop (96 + bSize) input
+      m = byteString2Integer $ B.take mSize $ B.drop (96 + bSize + eSize) input
+   in BL.toStrict $ encode $ b + e + m -- just use all vars for now. next, implement modular exponentiation.
+
 callPrecompiledContract :: PrecompiledCode -> B.ByteString -> (Gas, B.ByteString)
 callPrecompiledContract NullContract _ = (0, B.empty)
 callPrecompiledContract ECRecover inputData =
@@ -62,3 +73,6 @@ callPrecompiledContract IdentityContract inputData = do
         gIDENTITYBASE
           + gIDENTITYWORD * (ceiling $ fromIntegral (B.length inputData) / (32 :: Double))
    in (gas, inputData)
+callPrecompiledContract ModExp inputData =
+  let gas = gECRECOVER -- ignore gas calc for now; use unrelated constant
+   in (gas, modExp inputData)
