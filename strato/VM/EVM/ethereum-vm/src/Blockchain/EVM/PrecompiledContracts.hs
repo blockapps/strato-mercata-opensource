@@ -44,16 +44,27 @@ sha2 input =
   --    in
   SHA2.hash input
 
--- Byzantium
+-- Byzantium, EIP-198
 modExp :: B.ByteString -> B.ByteString
-modExp input = -- parse arguments
+modExp input = -- parse arguments: base, exp, mod
   let bSize = fromInteger $ byteString2Integer $ B.take 32 input
       eSize = fromInteger $ byteString2Integer $ B.take 32 $ B.drop 32 input
       mSize = fromInteger $ byteString2Integer $ B.take 32 $ B.drop 64 input
       b = byteString2Integer $ B.take bSize $ B.drop 96 input
       e = byteString2Integer $ B.take eSize $ B.drop (96 + bSize) input
       m = byteString2Integer $ B.take mSize $ B.drop (96 + bSize + eSize) input
-   in BL.toStrict $ encode $ b + e + m -- just use all vars for now. next, implement modular exponentiation.
+   in BL.toStrict $ encode $ powMod b e m -- return b**e % m
+
+powMod :: Integer -> Integer -> Integer -> Integer
+powMod b e m =
+  case (b, e, even e) of
+    (0, _, _) -> 0
+    (_, 0, _) -> 1
+    (_, _, True) ->
+      let y = powMod b (e `div` 2) m
+        in (y * y) `mod` m
+    (_, _, False) ->
+      b * (powMod b (e - 1) m) `mod` m
 
 callPrecompiledContract :: PrecompiledCode -> B.ByteString -> (Gas, B.ByteString)
 callPrecompiledContract NullContract _ = (0, B.empty)
