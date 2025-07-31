@@ -78,7 +78,10 @@ modExpGas input =
    in Gas $ (complexity * adjustedESize) `div` (getGasValue gQUADDIVISOR)
 
 multComplexity :: Integer -> Integer
-multComplexity x = x + 32 -- TODO implement
+multComplexity x =
+  if x <= 64 then x*x
+  else if x <= 1024 then x*x `div` 4 + 96 * x - 3072
+  else x*x `div` 16 + 480 * x - 199680
 
 adjustExponentLength :: Integer -> B.ByteString -> Integer
 adjustExponentLength eSize eHead =
