@@ -87,10 +87,8 @@ class OAuthUtil {
         baseURL: this.openIdDiscoveryUrl,
         withCredentials: false
       });
-      const response = await discoveryClient
-            .get("/")
-            .then((res: any) => res.data)
-      this.openIdConfig = response;
+      const response = await discoveryClient.get("/");
+      this.openIdConfig = response.data;
       this.jwtAlgorithm = this.openIdConfig.id_token_signing_alg_values_supported;
       this.issuer = this.openIdConfig.issuer;
       this.logOutUrl = this.openIdConfig.end_session_endpoint;
@@ -100,10 +98,8 @@ class OAuthUtil {
           baseURL: this.openIdConfig.jwks_uri,
           withCredentials: false
         });
-        const keyResponse = await jwksClient
-            .get("/")
-            .then((res: any) => res.data)
-        this.keys = keyResponse.keys;
+        const keyResponse = await jwksClient.get("/");
+        this.keys = keyResponse.data.keys;
       }
     } catch (error) {
       throw error;
