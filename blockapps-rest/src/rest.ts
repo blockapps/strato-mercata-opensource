@@ -16,6 +16,25 @@ import {
 } from "./types";
 
 /**
+ * Helper function to wrap API calls with consistent error handling
+ * @private
+ */
+async function wrapApiCall<T>(
+  apiCall: () => Promise<T>,
+  errorStatus: number = RestStatus.BAD_REQUEST
+): Promise<T> {
+  try {
+    return await apiCall();
+  } catch (err: any) {
+    throw new RestError(
+      errorStatus,
+      err.response?.statusText || err.response || err.message || err,
+      err.response?.data || err.response || err
+    );
+  }
+}
+
+/**
  * This is the main blockapps-rest interface.
  * @module rest
  */
@@ -366,39 +385,21 @@ async function resolveResults(user, pendingResults, _options:Options) {
  * @returns {module:rest~Account[]} A list of account details
  */
 async function getAccounts(user:OAuthUser, options:Options) {
-  try {
-    return await api.getAccounts(user, { ...options, isAsync: true });
-  } catch (err) {
-    throw new RestError(
-      RestStatus.BAD_REQUEST,
-      err.response.statusText || err.response || err,
-      err.response.data || err.response || err
-    );
-  }
+  return wrapApiCall(() => 
+    api.getAccounts(user, { ...options, isAsync: true })
+  );
 }
 
 async function getHealth(user:OAuthUser, options:Options) {
-  try {
-    return await api.getHealth(user, { ...options, isAsync: true });
-  } catch (err) {
-    throw new RestError(
-      RestStatus.BAD_REQUEST,
-      err.response.statusText || err.response || err,
-      err.response.data || err.response || err
-    );
-  }
+  return wrapApiCall(() => 
+    api.getHealth(user, { ...options, isAsync: true })
+  );
 }
 
 async function getStatus(user:OAuthUser, options:Options) {
-  try {
-    return await api.getStatus(user, { ...options, isAsync: true });
-  } catch (err) {
-    throw new RestError(
-      RestStatus.BAD_REQUEST,
-      err.response.statusText || err.response || err,
-      err.response.data || err.response || err
-    );
-  }
+  return wrapApiCall(() => 
+    api.getStatus(user, { ...options, isAsync: true })
+  );
 }
 
 // =====================================================================
@@ -451,27 +452,15 @@ async function createUser(ouser:OAuthUser, options:Options):Promise<BlockChainUs
  * @returns {module:rest~Contract[]} Returns a list of contracts with the `name` and `codeHash` values populated
  */
 async function compileContracts(user, contracts, options:Options) {
-  try {
-    return await api.compileContracts(user, contracts, options);
-  } catch (err) {
-    throw new RestError(
-      RestStatus.BAD_REQUEST,
-      err.response.statusText || err.response || err,
-      err.response.data || err.response || err
-    );
-  }
+  return wrapApiCall(() => 
+    api.compileContracts(user, contracts, options)
+  );
 }
 
 async function postContractsXabi(user, src: string, options:Options) {
-  try {
-    return await api.postContractsXabi(user, src, options);
-  } catch (err) {
-    throw new RestError(
-      RestStatus.BAD_REQUEST,
-      err.response.statusText || err.response || err,
-      err.response.data || err.response || err
-    );
-  }
+  return wrapApiCall(() => 
+    api.postContractsXabi(user, src, options)
+  );
 }
 
 // =====================================================================
@@ -1129,13 +1118,18 @@ async function sendMany(user, sendTxs:SendTx[], options:Options) {
 
 async function search(user:OAuthUser, contract:Contract, options:Options) {
   try {
-    const results = await api.search(user, contract, options);
-    return results;
-  } catch (err) {
-    if (err.response && err.response.status === RestStatus.NOT_FOUND) {
+    return await api.search(user, contract, options);
+  } catch (err: any) {
+    // Special handling for NOT_FOUND - return empty array instead of throwing
+    if (err.response?.status === RestStatus.NOT_FOUND) {
       return [];
     }
-    throw err;
+    // Re-throw with RestError wrapper for other errors
+    throw new RestError(
+      RestStatus.BAD_REQUEST,
+      err.response?.statusText || err.response || err.message || err,
+      err.response?.data || err.response || err
+    );
   }
 }
 
@@ -1215,13 +1209,18 @@ async function searchUntil(user:OAuthUser, contract:Contract, predicate, options
 
 async function searchWithContentRange(user:OAuthUser, contract:Contract, options:Options) {
   try {
-    const results = await api.searchWithContentRange(user, contract, options);
-    return results;
-  } catch (err) {
-    if (err.response && err.response.status === RestStatus.NOT_FOUND) {
+    return await api.searchWithContentRange(user, contract, options);
+  } catch (err: any) {
+    // Special handling for NOT_FOUND - return empty object instead of throwing
+    if (err.response?.status === RestStatus.NOT_FOUND) {
       return {};
     }
-    throw err;
+    // Re-throw with RestError wrapper for other errors
+    throw new RestError(
+      RestStatus.BAD_REQUEST,
+      err.response?.statusText || err.response || err.message || err,
+      err.response?.data || err.response || err
+    );
   }
 }
 
