@@ -244,15 +244,12 @@ function splitPath(fullname) {
  * @param {String} relativePath custom file path
  */
 
-function combine(filename:string, toObject:boolean = false, relativePath:string|undefined = undefined):Promise<any> {
+async function combine(filename:string, toObject:boolean = false, relativePath:string|undefined = undefined):Promise<any> {
   nameStore = [];
-  return new Promise(function(resolve, reject) {
-    let res: any = ''
-    res = toObject 
-      ? readFileLinesToObject({}, filename, relativePath) 
-      : readFileLinesToArray([], filename, relativePath)
-    resolve(res);
-  });
+  const res = toObject 
+    ? readFileLinesToObject({}, filename, relativePath) 
+    : readFileLinesToArray([], filename, relativePath);
+  return res;
 }
 
 /**
@@ -261,13 +258,10 @@ function combine(filename:string, toObject:boolean = false, relativePath:string|
  * @param {String} relativePath custom file path
  */
 
-function combineToString(filename:string, relativePath:string|undefined = undefined):Promise<any> {
+async function combineToString(filename:string, relativePath:string|undefined = undefined):Promise<any> {
   nameStore = [];
-  return new Promise(function(resolve, reject) {
-    let res: any = ''
-    res = readFileLinesToString(filename, relativePath) 
-    resolve(res);
-  });
+  const res = readFileLinesToString(filename, relativePath);
+  return res;
 }
 
 export default {
