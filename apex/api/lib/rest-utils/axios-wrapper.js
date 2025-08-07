@@ -2,6 +2,7 @@
 // axios wrapper
 // -----------------------------------
 const axios = require('axios');
+const config = require('../../config/app.config');
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 var isDebug = false;
@@ -48,13 +49,11 @@ module.exports = {
   post: function(host, body, path, headers=null) {
     const url = host + path;
     //if (isDebug) console.log('ax.post: body: ', JSON.stringify(body, null, 2));
-    const config_gasLimit = 32100000000;
-    const config_gasPrice = 1;
     if (body.txParams === undefined) {
-      body.txParams = {gasLimit : config_gasLimit, gasPrice: config_gasPrice};  // FIXME should come from config
+      body.txParams = {gasLimit : config.blockchain.gasLimit, gasPrice: config.blockchain.gasPrice};
     } else {
-      body.txParams.gasLimit = body.txParams.gasLimit || config_gasLimit;  // FIXME should come from config
-      body.txParams.gasPrice = body.txParams.gasPrice || config_gasPrice;  // FIXME should come from config
+      body.txParams.gasLimit = body.txParams.gasLimit || config.blockchain.gasLimit;
+      body.txParams.gasPrice = body.txParams.gasPrice || config.blockchain.gasPrice;
     }
     if (isDebug) console.log('curl -i', toDataParams(body), url);
     const message = {method: 'POST', host, path, body, headers} // MUST be named message
