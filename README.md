@@ -1,6 +1,12 @@
 ![logo](https://blockapps.net/wp-content/uploads/2025/01/STAKEABLE_GOLD_HALF.png)
 
-# STRATO Mercata platform (open source snapshot)
+# Full open-sourcing completed in March 2026
+
+In March 2026, we did the full open-source release of the STRATO platform.
+
+Head over to https://github.com/strato-net/strato-platform instead.
+
+# Archive of STRATO Mercata platform (open source snapshot)
 
 This is an open source snapshot of the STRATO Mercata platform, tools and applications.  It was released publicly in January 2025.
 
