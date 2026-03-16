@@ -1,5 +1,5 @@
-import * as path from 'path'
-import { Keccak } from 'sha3'
+import * as path from 'path';
+import { Keccak } from 'sha3';
 
 /**
  * This is the util interface
@@ -7,7 +7,7 @@ import { Keccak } from 'sha3'
  */
 
 // odds
-const cwd = path.resolve(process.cwd())
+const cwd = path.resolve(process.cwd());
 
 /**
  * @see https://github.com/ethereum/go-ethereum/blob/aa9fff3e68b1def0a9a22009c233150bf9ba481f/jsre/ethereum_js.go
@@ -30,18 +30,18 @@ const cwd = path.resolve(process.cwd())
 function isAddress(address) {
   // check if it has the basic requirements of an address
   if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-    return false
+    return false;
   }
   // If it's all small caps or all all caps, return true
   if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
-    return true
+    return true;
   }
   // Otherwise check each case
-  return isChecksumAddress(address)
+  return isChecksumAddress(address);
 }
 
 function isHash(hash) {
-  return /([A-Fa-f0-9]{64})$/.test(hash)
+  return /([A-Fa-f0-9]{64})$/.test(hash);
 }
 
 /**
@@ -57,17 +57,20 @@ function isHash(hash) {
  */
 function isChecksumAddress(_address) {
   // Check each case
-  const address = _address.replace('0x', '')
+  const address = _address.replace('0x', '');
   const addressHash = new Keccak(256);
   addressHash.update(address.toLowerCase());
   addressHash.digest('hex');
   for (let i = 0; i < 40; i++) {
     // the nth letter should be uppercase if the nth digit of casemap is 1
-    if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-      return false
+    if (
+      (parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) ||
+      (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])
+    ) {
+      return false;
     }
   }
-  return true
+  return true;
 }
 
 /**
@@ -95,10 +98,10 @@ function iuid() {
  * @return {Int}
  */
 function uid(prefix?, digits = 6) {
-  if (digits < 1) digits = 1
-  if (digits > 16) digits = 16
-  const random = Math.floor(Math.random() * (10 ** digits))
-  return (prefix === undefined) ? `${random}` : `${prefix}_${random}`
+  if (digits < 1) digits = 1;
+  if (digits > 16) digits = 16;
+  const random = Math.floor(Math.random() * 10 ** digits);
+  return prefix === undefined ? `${random}` : `${prefix}_${random}`;
 }
 
 /**
@@ -113,9 +116,9 @@ function uid(prefix?, digits = 6) {
  */
 function usc(args) {
   return Object.keys(args).reduce((acc, key) => {
-    acc[`_${key}`] = args[key]
-    return acc
-  }, {})
+    acc[`_${key}`] = args[key];
+    return acc;
+  }, {});
 }
 
 /**
@@ -133,11 +136,11 @@ function usc(args) {
  */
 function getArgInt(argName, defaultValue) {
   const index = process.argv.indexOf(argName);
-  if (index <= 0 ) {
-    if (defaultValue !== undefined ) return defaultValue;
+  if (index <= 0) {
+    if (defaultValue !== undefined) return defaultValue;
     throw new Error(`Argument not found ${argName}`);
   }
-  const stringValue = process.argv[index+1];
+  const stringValue = process.argv[index + 1];
   const intValue = parseInt(stringValue);
   if (isNaN(intValue)) throw new Error(`Invalid int value for ${argName} : ${stringValue}`);
   return intValue;
@@ -184,19 +187,19 @@ function sleep(ms) {
  */
 
 async function until(predicate, action, options, timeout = 60000) {
-  const phi = 10
-  let dt = 500
-  let totalSleep = 0
+  const phi = 10;
+  let dt = 500;
+  let totalSleep = 0;
   while (totalSleep < timeout) {
-    const result = await action(options)
+    const result = await action(options);
     if (predicate(result)) {
-      return result
+      return result;
     }
-    await sleep(dt)
-    totalSleep += dt
-    dt += phi
+    await sleep(dt);
+    totalSleep += dt;
+    dt += phi;
   }
-  throw new Error(`until: timeout ${timeout} ms exceeded`)
+  throw new Error(`until: timeout ${timeout} ms exceeded`);
 }
 
 function timeout(ms) {
@@ -239,16 +242,18 @@ function timeout(ms) {
  * @return {Array}
  */
 // TODO: pass options instead of isDebug
- function filter_isContained(setA, setB, comparator, isDebug) {
+function filter_isContained(setA, setB, comparator, isDebug) {
   if (isDebug) {
     console.log('setA', setA);
     console.log('setB', setB);
   }
   return setA.filter(function (memberA) {
-    return !(setB.filter(function (memberB) {
-      // compare
-      return comparator(memberA, memberB);
-    }).length > 0); // some items were found in setA that are not included in setB
+    return !(
+      setB.filter(function (memberB) {
+        // compare
+        return comparator(memberA, memberB);
+      }).length > 0
+    ); // some items were found in setA that are not included in setB
   });
 }
 
@@ -268,8 +273,6 @@ function toCsv(array) {
   }, '');
 }
 
-
-
 export default {
   cwd,
   filter_isContained,
@@ -282,5 +285,5 @@ export default {
   sleep,
   until,
   timeout,
-  toCsv
-}
+  toCsv,
+};

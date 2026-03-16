@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
 /**
@@ -28,8 +28,8 @@ import * as yaml from 'js-yaml';
  */
 
 function get(filename) {
-  const content = fs.readFileSync(filename, 'utf8')
-  return content
+  const content = fs.readFileSync(filename, 'utf8');
+  return content;
 }
 
 /**
@@ -52,8 +52,8 @@ function get(filename) {
  */
 
 function getYaml(filename) {
-  const content = fs.readFileSync(filename, 'utf8')
-  return yaml.safeLoad(content)
+  const content = fs.readFileSync(filename, 'utf8');
+  return yaml.safeLoad(content);
 }
 
 /**
@@ -69,12 +69,12 @@ function getYaml(filename) {
  */
 
 function getJson(filename, options) {
-  const content = fs.readFileSync(filename, options)
-  return JSON.parse(content.toString())
+  const content = fs.readFileSync(filename, options);
+  return JSON.parse(content.toString());
 }
 
 export default {
   get,
   getYaml,
   getJson,
-}
+};

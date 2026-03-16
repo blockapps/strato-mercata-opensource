@@ -1,5 +1,5 @@
-import * as fs from 'fs'
-import * as nodepath from 'path'
+import * as fs from 'fs';
+import * as nodepath from 'path';
 const cwd = nodepath.resolve(process.cwd());
 
 let nameStore = [];
@@ -11,13 +11,13 @@ let nameStore = [];
 
 function getImportsTree(fullname) {
   let importFullnames = [];
-  let array = fs.readFileSync(fullname).toString().split('\n');
-  let parentPath = splitPath(fullname);
+  const array = fs.readFileSync(fullname).toString().split('\n');
+  const parentPath = splitPath(fullname);
   for (let i = 0; i < array.length; i++) {
-    let line = array[i];
-    if (line.startsWith('import') && !line.includes("<")) {
-      let importName = getImportName(line);
-      let importFullname = parentPath + nodepath.sep + importName;
+    const line = array[i];
+    if (line.startsWith('import') && !line.includes('<')) {
+      const importName = getImportName(line);
+      const importFullname = parentPath + nodepath.sep + importName;
       if (isImported(importFullname)) continue;
       importFullnames.push(importFullname);
       importFullnames = importFullnames.concat(getImportsTree(importFullname));
@@ -31,7 +31,7 @@ function getImportsTree(fullname) {
 // import {symbol1 as alias, symbol2} from "filename";
 // import "filename";
 function getImportName(line) {
-  let importName = line.split('"').slice(-2, -1)[0];
+  const importName = line.split('"').slice(-2, -1)[0];
   return importName;
 }
 
@@ -48,19 +48,22 @@ function getImportName(line) {
 function readFileLinesToObject(initialFileMap, fullname, relativePath = undefined) {
   const array = fs.readFileSync(fullname).toString().split('\n');
   isImported(fullname);
-  const { fileMap, buffer } = array.reduce((obj, line) => {
-    const { fileMap, buffer } = obj;
-    if (line.startsWith('import') && !line.includes("<")) {
-      const newBuffer = buffer + '//' + line + '\n';
-      const newFileMap = importFileToObject(fileMap, fullname, relativePath, line);
-      return { fileMap: newFileMap, buffer: newBuffer }
-    } else {
-      const fixedLine = line.replace('\r', ' '); // Windows fix
-      const newBuffer = buffer + fixedLine + '\n';
-      return { fileMap, buffer: newBuffer }
-    }
-  }, {fileMap: initialFileMap, buffer: ''});
-  return { ...fileMap, [getShortName(fullname)]: buffer }
+  const { fileMap, buffer } = array.reduce(
+    (obj, line) => {
+      const { fileMap, buffer } = obj;
+      if (line.startsWith('import') && !line.includes('<')) {
+        const newBuffer = buffer + '//' + line + '\n';
+        const newFileMap = importFileToObject(fileMap, fullname, relativePath, line);
+        return { fileMap: newFileMap, buffer: newBuffer };
+      } else {
+        const fixedLine = line.replace('\r', ' '); // Windows fix
+        const newBuffer = buffer + fixedLine + '\n';
+        return { fileMap, buffer: newBuffer };
+      }
+    },
+    { fileMap: initialFileMap, buffer: '' }
+  );
+  return { ...fileMap, [getShortName(fullname)]: buffer };
 }
 
 /**
@@ -76,19 +79,22 @@ function readFileLinesToObject(initialFileMap, fullname, relativePath = undefine
 function readFileLinesToArray(initialFileArray, fullname, relativePath = undefined) {
   const array = fs.readFileSync(fullname).toString().split('\n');
   isImported(fullname);
-  const { fileArray, buffer } = array.reduce((obj, line) => {
-    const { fileArray, buffer } = obj;
-    if (line.startsWith('import') && !line.includes("<")) {
-      const newBuffer = buffer + '//' + line + '\n';
-      const newFileArray = importFileToArray(fileArray, fullname, relativePath, line);
-      return { fileArray: newFileArray, buffer: newBuffer }
-    } else {
-      const fixedLine = line.replace('\r', ' '); // Windows fix
-      const newBuffer = buffer + fixedLine + '\n';
-      return { fileArray, buffer: newBuffer }
-    }
-  }, {fileArray: initialFileArray, buffer: ''});
-  return [...fileArray, [getShortName(fullname), buffer]]
+  const { fileArray, buffer } = array.reduce(
+    (obj, line) => {
+      const { fileArray, buffer } = obj;
+      if (line.startsWith('import') && !line.includes('<')) {
+        const newBuffer = buffer + '//' + line + '\n';
+        const newFileArray = importFileToArray(fileArray, fullname, relativePath, line);
+        return { fileArray: newFileArray, buffer: newBuffer };
+      } else {
+        const fixedLine = line.replace('\r', ' '); // Windows fix
+        const newBuffer = buffer + fixedLine + '\n';
+        return { fileArray, buffer: newBuffer };
+      }
+    },
+    { fileArray: initialFileArray, buffer: '' }
+  );
+  return [...fileArray, [getShortName(fullname), buffer]];
 }
 
 /**
@@ -104,10 +110,10 @@ function readFileLinesToString(fullname, relativePath = undefined) {
   let buffer = '';
   isImported(fullname);
   //buffer += '// --- start: ' + fullname + '\n';
-  let array = fs.readFileSync(fullname).toString().split('\n');
+  const array = fs.readFileSync(fullname).toString().split('\n');
   for (let i = 0; i < array.length; i++) {
     let line = array[i];
-    if (line.startsWith('import') && !line.includes("<")) {
+    if (line.startsWith('import') && !line.includes('<')) {
       buffer += importFileToString(fullname, relativePath, line) + '\n';
     } else {
       line = line.replace('\r', ' '); // Windows fix
@@ -137,16 +143,23 @@ function readFileLinesToString(fullname, relativePath = undefined) {
  */
 
 function importFileToObject(fileMap, fullname, relativePath, line) {
-  let importName = line.replace(/import[\s]+/i, '').replace(/\"/gi, '').replace(';', '');
-  importName = importName.replace('\r', '');  // Windows fix
+  let importName = line
+    .replace(/import[\s]+/i, '')
+    .replace(/\"/gi, '')
+    .replace(';', '');
+  importName = importName.replace('\r', ''); // Windows fix
   if (isImported(importName)) {
     return fileMap;
   }
   // if import name starts with '/' - read relative to project root -LS
   if (importName.indexOf('/') == 0) {
-    return readFileLinesToObject(fileMap, nodepath.join(relativePath || cwd, importName), relativePath);
+    return readFileLinesToObject(
+      fileMap,
+      nodepath.join(relativePath || cwd, importName),
+      relativePath
+    );
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return readFileLinesToObject(fileMap, nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -161,16 +174,23 @@ function importFileToObject(fileMap, fullname, relativePath, line) {
  */
 
 function importFileToArray(fileArray, fullname, relativePath, line) {
-  let importName = line.replace(/import[\s]+/i, '').replace(/\"/gi, '').replace(';', '');
-  importName = importName.replace('\r', '');  // Windows fix
+  let importName = line
+    .replace(/import[\s]+/i, '')
+    .replace(/\"/gi, '')
+    .replace(';', '');
+  importName = importName.replace('\r', ''); // Windows fix
   if (isImported(importName)) {
     return fileArray;
   }
   // if import name starts with '/' - read relative to project root -LS
   if (importName.indexOf('/') == 0) {
-    return readFileLinesToArray(fileArray, nodepath.join(relativePath || cwd, importName), relativePath);
+    return readFileLinesToArray(
+      fileArray,
+      nodepath.join(relativePath || cwd, importName),
+      relativePath
+    );
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return readFileLinesToArray(fileArray, nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -186,17 +206,22 @@ function importFileToArray(fileArray, fullname, relativePath, line) {
 
 function importFileToString(fullname, relativePath, line) {
   let buffer = '//' + line + '\n';
-  let importName = line.replace(/import[\s]+/i, '').replace(/\"/gi, '').replace(';', '');
-  importName = importName.replace('\r', '');  // Windows fix
+  let importName = line
+    .replace(/import[\s]+/i, '')
+    .replace(/\"/gi, '')
+    .replace(';', '');
+  importName = importName.replace('\r', ''); // Windows fix
   if (isImported(importName)) {
     buffer += '// exists\n';
     return buffer;
   }
   // if import name starts with '/' - read relative to project root -LS
   if (importName.indexOf('/') == 0) {
-    return buffer + readFileLinesToString(nodepath.join(relativePath || cwd, importName), relativePath);
+    return (
+      buffer + readFileLinesToString(nodepath.join(relativePath || cwd, importName), relativePath)
+    );
   }
-  let parentPath = splitPath(fullname);
+  const parentPath = splitPath(fullname);
   return buffer + readFileLinesToString(nodepath.join(parentPath, importName), relativePath);
 }
 
@@ -233,7 +258,7 @@ function isImported(fullname) {
 function splitPath(fullname) {
   let array = fullname.split(nodepath.sep);
   array = array.length <= 1 ? fullname.split('/') : array; // Windows fix
-  let path = array.slice(0, array.length - 1).join(nodepath.sep);
+  const path = array.slice(0, array.length - 1).join(nodepath.sep);
   return path;
 }
 
@@ -244,13 +269,17 @@ function splitPath(fullname) {
  * @param {String} relativePath custom file path
  */
 
-function combine(filename:string, toObject:boolean = false, relativePath:string|undefined = undefined):Promise<any> {
+function combine(
+  filename: string,
+  toObject: boolean = false,
+  relativePath: string | undefined = undefined
+): Promise<any> {
   nameStore = [];
-  return new Promise(function(resolve, reject) {
-    let res: any = ''
-    res = toObject 
-      ? readFileLinesToObject({}, filename, relativePath) 
-      : readFileLinesToArray([], filename, relativePath)
+  return new Promise(function (resolve, reject) {
+    let res: any = '';
+    res = toObject
+      ? readFileLinesToObject({}, filename, relativePath)
+      : readFileLinesToArray([], filename, relativePath);
     resolve(res);
   });
 }
@@ -261,11 +290,14 @@ function combine(filename:string, toObject:boolean = false, relativePath:string|
  * @param {String} relativePath custom file path
  */
 
-function combineToString(filename:string, relativePath:string|undefined = undefined):Promise<any> {
+function combineToString(
+  filename: string,
+  relativePath: string | undefined = undefined
+): Promise<any> {
   nameStore = [];
-  return new Promise(function(resolve, reject) {
-    let res: any = ''
-    res = readFileLinesToString(filename, relativePath) 
+  return new Promise(function (resolve, reject) {
+    let res: any = '';
+    res = readFileLinesToString(filename, relativePath);
     resolve(res);
   });
 }
@@ -274,4 +306,4 @@ export default {
   combine,
   combineToString,
   getShortName,
-}
+};

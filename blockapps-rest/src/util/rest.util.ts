@@ -1,12 +1,12 @@
-const {stringify} = require('flatted/cjs');
+const { stringify } = require('flatted/cjs');
 
 class RestError extends Error {
-  response : any;
-  
+  response: any;
+
   constructor(status, statusText, data) {
-    super(`${status} ${statusText}: ${stringify(data)}`)
-    this.name = 'RestError'
-    this.response = { status, statusText, data }
+    super(`${status} ${statusText}: ${stringify(data)}`);
+    this.name = 'RestError';
+    this.response = { status, statusText, data };
   }
 }
 
@@ -54,10 +54,6 @@ const response = {
       error: stringify(error),
     });
   },
-}
+};
 
-
-export {
-  RestError,
-  response
-}
+export { RestError, response };

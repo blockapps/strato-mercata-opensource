@@ -1,15 +1,15 @@
-import * as commander from "commander";
-import * as fs from "fs";
-import fsUtil from "./fsUtil";
-import oauthUtil from "./oauth.util";
-import * as tcpPortUsed from "tcp-port-used";
-import * as http from "http";
-import * as https from "https";
-import * as qs from "query-string";
-import * as url from "url";
-const { stringify } = require("flatted/cjs");
-const envPath = ".env";
-const envfile = require("envfile");
+import commander from 'commander';
+import * as fs from 'fs';
+import fsUtil from './fsUtil.js';
+import oauthUtil from './oauth.util.js';
+import * as tcpPortUsed from 'tcp-port-used';
+import * as http from 'http';
+import * as https from 'https';
+import * as qs from 'query-string';
+import * as url from 'url';
+const { stringify } = require('flatted/cjs');
+const envPath = '.env';
+const envfile = require('envfile');
 let envConfig = {};
 
 const DUMMY_SSL_KEY = `-----BEGIN PRIVATE KEY-----
@@ -65,36 +65,32 @@ pBMYLinJZN+jM/Xddr18fL0obdkk5Q==
 -----END CERTIFICATE-----`;
 
 if (!fs.existsSync(envPath)) {
-  fs.appendFileSync(envPath, "");
+  fs.appendFileSync(envPath, '');
 }
 
 envConfig = envfile.parseFileSync(envPath);
 
 const flows = {
-  authorizationCode: "authorization-code",
-  clientCredential: "client-credential",
-  resourceOwnerPasswordCredential: "resource-owner-password-credential"
+  authorizationCode: 'authorization-code',
+  clientCredential: 'client-credential',
+  resourceOwnerPasswordCredential: 'resource-owner-password-credential',
 };
 
 commander
-  .option("-c, --config [path]", "Config file", "config.yaml")
+  .option('-c, --config [path]', 'Config file', 'config.yaml')
   .option(
-    "-f, --flow [oauth-flow]",
+    '-f, --flow [oauth-flow]',
     `The oauth flow to user. Valid options are "${flows.clientCredential}" (default) or "${flows.authorizationCode}" or "${flows.resourceOwnerPasswordCredential}"`,
-    "client-credential"
+    'client-credential'
   )
+  .option('-e, --env [tokenName]', 'Create a .env file to include the specified token', null)
   .option(
-    "-e, --env [tokenName]",
-    "Create a .env file to include the specified token",
-    null
-  )
-  .option(
-    "-u, --username [username]",
+    '-u, --username [username]',
     `Username or client-id depending on the flow (optional)`,
     null
   )
   .option(
-    "-p, --password [password]",
+    '-p, --password [password]',
     `Password or client-secret depending on the flow (optional)`,
     null
   )
@@ -111,17 +107,17 @@ const config = fsUtil.getYaml(commander.config);
 
 let redirectUriParsed;
 try {
-  redirectUriParsed = url.parse(config.nodes[0].oauth.redirectUri)
-} catch(err) {
+  redirectUriParsed = url.parse(config.nodes[0].oauth.redirectUri);
+} catch (err) {
   console.error('Unable to parse redirectUri as the url', err);
   process.exit(10);
 }
 
 let portNumber;
 if (redirectUriParsed.port) {
-  portNumber = parseInt(redirectUriParsed.port)
+  portNumber = parseInt(redirectUriParsed.port);
 } else {
-  portNumber = (redirectUriParsed.protocol === 'https:') ? 443 : 80
+  portNumber = redirectUriParsed.protocol === 'https:' ? 443 : 80;
 }
 
 if (
@@ -130,11 +126,11 @@ if (
   config.nodes.length === 0 ||
   config.nodes[0].oauth === undefined
 ) {
-  console.error("Invalid config");
+  console.error('Invalid config');
   process.exit(3);
 }
 
-const run = async function() {
+const run = async function () {
   const portInUse = await tcpPortUsed.check(portNumber);
   if (portInUse) {
     console.error(`Port ${portNumber} is in use.`);
@@ -146,35 +142,35 @@ const run = async function() {
   const signinUri = oauth.getSigninURL();
   async function requestListener(req, res) {
     // TODO: better route matching
-    
+
     if (req.url === '/') {
       res.writeHead(302, {
-        'Location': signinUri
+        Location: signinUri,
       });
       res.end();
-      return
+      return;
     }
 
     const callbackPath = redirectUriParsed.pathname;
-    
-    if (req.url.indexOf(callbackPath) !== 0 ) {
+
+    if (req.url.indexOf(callbackPath) !== 0) {
       if (req.url !== '/favicon.ico') {
         console.log('Unknown URI was called: ' + req.url);
       }
       res.writeHead(404);
       res.end();
-      return
+      return;
     }
-    
-    const urlParts = req.url.split("?");
+
+    const urlParts = req.url.split('?');
     if (urlParts.length < 2) {
-      console.error("Missing query string in redirectUri callback url.");
-      return
+      console.error('Missing query string in redirectUri callback url.');
+      return;
     }
     const query = qs.parse(urlParts[1]);
     if (query.code === undefined) {
       console.error('Missing required query parameter "code" in redirectUri callback');
-      return
+      return;
     }
     const acToken = await oauth.getAccessTokenByAuthCode(query.code);
 
@@ -182,11 +178,11 @@ const run = async function() {
       envConfig[commander.env] = acToken.token.access_token;
       const envContent = envfile.stringifySync(envConfig);
       fs.writeFileSync(envPath, envContent);
-      console.log(".env file was saved!");
+      console.log('.env file was saved!');
     }
-    console.log("Token obtained by authorization code flow is:");
+    console.log('Token obtained by authorization code flow is:');
     console.log(stringify(acToken, null, 2));
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.write(`
       <html>
         <head>
@@ -318,7 +314,7 @@ const run = async function() {
           envConfig[commander.env] = ccToken.token.access_token;
           const envContent = envfile.stringifySync(envConfig);
           fs.writeFileSync(envPath, envContent);
-          console.log(".env file was saved!");
+          console.log('.env file was saved!');
         }
         console.log(`Token obtained by ${commander.flow} flow is:`);
         console.log(stringify(ccToken, null, 2));
@@ -357,7 +353,7 @@ const run = async function() {
           envConfig[commander.env] = ropcToken.token;
           const envContent = envfile.stringifySync(envConfig);
           fs.writeFileSync(envPath, envContent);
-          console.log(".env file was saved!");
+          console.log('.env file was saved!');
         }
         console.log(`Token obtained by ${commander.flow} flow is:`);
         console.log(stringify(ropcToken, null, 2));
@@ -371,15 +367,13 @@ const run = async function() {
       if (portNumber == 443) {
         const options = {
           key: DUMMY_SSL_KEY,
-          cert: DUMMY_SSL_CERT
+          cert: DUMMY_SSL_CERT,
         };
-        const server = https
-          .createServer(options, requestListener)
-          .listen(portNumber);
+        const server = https.createServer(options, requestListener).listen(portNumber);
       } else {
         const server = http.createServer(requestListener).listen(portNumber);
       }
-      const tokenGetterUrl = `${redirectUriParsed.protocol}//${redirectUriParsed.host}`
+      const tokenGetterUrl = `${redirectUriParsed.protocol}//${redirectUriParsed.host}`;
       console.log(
         `Open sign-in URL in your browser to sign-in with OAuth and fetch token: ${tokenGetterUrl}`
       );
