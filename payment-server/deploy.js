@@ -55,6 +55,7 @@ describe("Payment Server - deploy contracts", function () {
 
   let token
   let stripe
+  let metamask
   let USDST
   let redemption
 
@@ -94,6 +95,10 @@ describe("Payment Server - deploy contracts", function () {
     stripe = await uploadContract(token, 'External', 'Payment', config.stripe)
   })
 
+  it('Deploy MetaMask ExternalPaymentService', async () => {
+    metamask = await uploadContract(token, 'External', 'Payment', config.metamask)
+  })
+
   it('Deploy USDST TokenPaymentService', async () => {
     USDST = await uploadContract(token, 'Token', 'Payment', config.USDST)
   })
@@ -106,6 +111,7 @@ describe("Payment Server - deploy contracts", function () {
     const deployArgs = {
       deployFilePath: `${config.configDirPath}/deploy.yaml`,
       stripe,
+      metamask,
       USDST,
       redemption
     }

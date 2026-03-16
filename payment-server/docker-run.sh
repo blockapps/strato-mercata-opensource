@@ -143,17 +143,16 @@ else
   export STRIPE_IMAGE_URL_VALUE=${STRIPE_IMAGE_URL_VALUE:-'https://assets.ctfassets.net/fzn2n1nzq965/01hMKr6nEEGVfOuhsaMIXQ/c424849423b5f036a8892afa09ac38c7/favicon.ico'}
   export STRIPE_PRIMARY_SALE_FEE_PERCENTAGE_VALUE=${STRIPE_PRIMARY_SALE_FEE_PERCENTAGE_VALUE:-10.0}
   export STRIPE_SECONDARY_SALE_FEE_PERCENTAGE_VALUE=${STRIPE_SECONDARY_SALE_FEE_PERCENTAGE_VALUE:-3.0}
-  # TODO: Disabled for initial payment server release
-  # export METAMASK_SERVICE_NAME_VALUE=${METAMASK_SERVICE_NAME_VALUE:-'MetaMask'}
-  # export METAMASK_ONBOARDING_ROUTE_VALUE=${METAMASK_ONBOARDING_ROUTE_VALUE:-'/metamask/onboarding'}
-  # export METAMASK_ONBOARDING_STATUS_ROUTE_VALUE=${METAMASK_ONBOARDING_STATUS_ROUTE_VALUE:-'/metamask/onboarding/status'}
-  # export METAMASK_ONBOARDING_TEXT_VALUE=${METAMASK_ONBOARDING_TEXT_VALUE:-'Connect MetaMask'}
-  # export METAMASK_CHECKOUT_ROUTE_VALUE=${METAMASK_CHECKOUT_ROUTE_VALUE:-'/metamask/checkout'}
-  # export METAMASK_CHECKOUT_TEXT_VALUE=${METAMASK_CHECKOUT_TEXT_VALUE:-'Checkout with MetaMask'}
-  # export METAMASK_ORDER_STATUS_ROUTE_VALUE=${METAMASK_ORDER_STATUS_ROUTE_VALUE:-'/metamask/order/status'}
-  # export METAMASK_IMAGE_URL_VALUE=${METAMASK_IMAGE_URL_VALUE:-'https://fileserver.mercata-testnet2.blockapps.net/highway/3fe266f64979ff185364131d9f6f3bc96eb272e98691bbc829ccf31f59d956c9.png'}
-  # export METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE=${METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE:-10.0}
-  # export METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE=${METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE:-3.0}
+  export METAMASK_SERVICE_NAME_VALUE=${METAMASK_SERVICE_NAME_VALUE:-'MetaMask'}
+  export METAMASK_ONBOARDING_ROUTE_VALUE=${METAMASK_ONBOARDING_ROUTE_VALUE:-'/metamask/onboarding'}
+  export METAMASK_ONBOARDING_STATUS_ROUTE_VALUE=${METAMASK_ONBOARDING_STATUS_ROUTE_VALUE:-'/metamask/onboarding/status'}
+  export METAMASK_ONBOARDING_TEXT_VALUE=${METAMASK_ONBOARDING_TEXT_VALUE:-'Connect MetaMask'}
+  export METAMASK_CHECKOUT_ROUTE_VALUE=${METAMASK_CHECKOUT_ROUTE_VALUE:-'/metamask/checkout'}
+  export METAMASK_CHECKOUT_TEXT_VALUE=${METAMASK_CHECKOUT_TEXT_VALUE:-'Checkout with MetaMask'}
+  export METAMASK_ORDER_STATUS_ROUTE_VALUE=${METAMASK_ORDER_STATUS_ROUTE_VALUE:-'/metamask/order/status'}
+  export METAMASK_IMAGE_URL_VALUE=${METAMASK_IMAGE_URL_VALUE:-'https://fileserver.mercata-testnet2.blockapps.net/highway/3fe266f64979ff185364131d9f6f3bc96eb272e98691bbc829ccf31f59d956c9.png'}
+  export METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE=${METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE:-10.0}
+  export METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE=${METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE:-3.0}
   export USDST_ADDRESS=${USDST_ADDRESS}
   export USDST_SERVICE_NAME_VALUE=${USDST_SERVICE_NAME_VALUE:-'USDST'}
   export USDST_IMAGE_URL_VALUE=${USDST_IMAGE_URL_VALUE:-'https://blockapps-public-assets.s3.us-east-1.amazonaws.com/icons/stratFinished.png'}
@@ -236,18 +235,17 @@ else
     sed -i 's*<stripe_image_url_value>*'"${STRIPE_IMAGE_URL_VALUE}"'*g' /tmp/tmp.config.yaml
     sed -i 's*<stripe_primary_sale_fee_percentage_value>*'"${STRIPE_PRIMARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
     sed -i 's*<stripe_secondary_sale_fee_percentage_value>*'"${STRIPE_SECONDARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # TODO: Disabled for initial payment server release
-    # sed -i 's*<metamask_service_name_value>*'"${METAMASK_SERVICE_NAME_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_service_url_value>*'"${SERVER_HOST}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_onboarding_route_value>*'"${METAMASK_ONBOARDING_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_onboarding_status_route_value>*'"${METAMASK_ONBOARDING_STATUS_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_onboarding_text_value>*'"${METAMASK_ONBOARDING_TEXT_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_checkout_route_value>*'"${METAMASK_CHECKOUT_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_checkout_text_value>*'"${METAMASK_CHECKOUT_TEXT_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_order_status_route_value>*'"${METAMASK_ORDER_STATUS_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_image_url_value>*'"${METAMASK_IMAGE_URL_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_primary_sale_fee_percentage_value>*'"${METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
-    # sed -i 's*<metamask_secondary_sale_fee_percentage_value>*'"${METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_service_name_value>*'"${METAMASK_SERVICE_NAME_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_service_url_value>*'"${SERVER_HOST}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_onboarding_route_value>*'"${METAMASK_ONBOARDING_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_onboarding_status_route_value>*'"${METAMASK_ONBOARDING_STATUS_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_onboarding_text_value>*'"${METAMASK_ONBOARDING_TEXT_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_checkout_route_value>*'"${METAMASK_CHECKOUT_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_checkout_text_value>*'"${METAMASK_CHECKOUT_TEXT_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_order_status_route_value>*'"${METAMASK_ORDER_STATUS_ROUTE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_image_url_value>*'"${METAMASK_IMAGE_URL_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_primary_sale_fee_percentage_value>*'"${METAMASK_PRIMARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
+    sed -i 's*<metamask_secondary_sale_fee_percentage_value>*'"${METAMASK_SECONDARY_SALE_FEE_PERCENTAGE_VALUE}"'*g' /tmp/tmp.config.yaml
     sed -i 's*<USDST_USDST_address_value>*'"${USDST_ADDRESS}"'*g' /tmp/tmp.config.yaml
     sed -i 's*<USDST_service_name_value>*'"${USDST_SERVICE_NAME_VALUE}"'*g' /tmp/tmp.config.yaml
     sed -i 's*<USDST_image_url_value>*'"${USDST_IMAGE_URL_VALUE}"'*g' /tmp/tmp.config.yaml

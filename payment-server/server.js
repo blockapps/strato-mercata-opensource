@@ -15,7 +15,7 @@ import {
 } from './helpers/utils.js';
 import { 
   STRIPE_CONTRACT_ADDRESS, 
-  // METAMASK_CONTRACT_ADDRESS, // TODO: Disabled for initial payment server release
+  METAMASK_CONTRACT_ADDRESS,
   REDEMPTION_CONTRACT_ADDRESS,
 } from './helpers/constants.js';
 import routes from './routes.js';
@@ -110,8 +110,7 @@ app.listen(config.port, async (e) => {
   console.log(`SKIP_CONTRACT_VALIDATION: ${process.env.SKIP_CONTRACT_VALIDATION}`);
   if (!process.env.SKIP_CONTRACT_VALIDATION) {
     await validatePaymentServiceContract(STRIPE_CONTRACT_ADDRESS);
-    // TODO: Disabled for initial payment server release
-    // await validatePaymentServiceContract(METAMASK_CONTRACT_ADDRESS);
+    await validatePaymentServiceContract(METAMASK_CONTRACT_ADDRESS);
     await validateRedemptionServiceContract(REDEMPTION_CONTRACT_ADDRESS);
   }
 });

@@ -43,32 +43,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Handle form submission
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault(); 
         const selectedOption = form.querySelector('input[name="option"]:checked');
 
         if (selectedOption) {
-            fetch(`${window.location.protocol}//${window.location.host}/metamask/tx/params?checkout_total=${orderInfo?.checkoutEvent?.amount}&currency=${selectedOption.value}&username=${orderInfo.sellerCommonName || ''}`, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(async (txParams) => {
-                console.log(txParams)
-                const accounts = await window.ethereum.request({ method: "eth_requestAccounts"})
+            try {
+                // Get transaction parameters
+                const txParamsResponse = await fetch(`${window.location.protocol}//${window.location.host}/metamask/tx/params?checkout_total=${orderInfo?.checkoutEvent?.amount}&currency=${selectedOption.value}&username=${orderInfo.sellerCommonName || ''}`, {
+                    method: 'GET'
+                });
+                
+                if (!txParamsResponse.ok) {
+                    throw new Error('Failed to get transaction parameters');
+                }
+                
+                const txParams = await txParamsResponse.json();
+                console.log('Transaction parameters:', txParams);
+                
+                // Request MetaMask connection
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                
+                // Switch to the correct network
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: txParams.networkId }]
-                })
-                await window.ethereum.request({
+                });
+                
+                // Send the transaction
+                const txHash = await window.ethereum.request({
                     method: "eth_sendTransaction",
                     params: [{
                         from: accounts[0],
                         ...txParams
                     }]
-                }).then((txHash) => console.log(txHash))
-            })
-            .then(async () => {
-                fetch(`${window.location.href}`, {
+                });
+                
+                console.log('Transaction hash:', txHash);
+                
+                // Complete the checkout
+                const checkoutResponse = await fetch(`${window.location.href}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -77,15 +91,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currency: selectedOption.value,
                         orderHash: orderHash, 
                     })
-                })
-                .then(response => response.json())
-                .then(({ assets }) => {
-                    window.location.href = `${redirectUrl}?assets=${assets}`;
-                })
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+                });
+                
+                if (!checkoutResponse.ok) {
+                    throw new Error('Failed to complete checkout');
+                }
+                
+                const { assets } = await checkoutResponse.json();
+                window.location.href = `${redirectUrl}?assets=${assets}`;
+                
+            } catch (error) {
+                console.error('Error during MetaMask payment:', error);
+                alert(`Payment failed: ${error.message}`);
+            }
         } else {
             alert('Please select an option.');
         }

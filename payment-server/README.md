@@ -205,4 +205,3 @@ The payment server uses `jest` as its testing framework. In order to run the tes
 ```
 
 **It is highly recommended to use a separate database for testing purposes**. Afterwards, simply run `npm run test`.
-

@@ -46,4 +46,9 @@ router.get(
   MetaMaskController.orderStatus
 )
 
+router.put(
+    '/wallet/change',
+    MetaMaskController.changeUserWallet
+)
+
 export default router;
