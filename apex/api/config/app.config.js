@@ -32,6 +32,10 @@ module.exports = {
   emailNotifications: {
     nodeHealthGracePeriod: 60 * 1000, // Grace period for node health after the node's start
     pollFrequency: 15 * 1000,
+  },
+  blockchain: {
+    gasLimit: process.env.BLOCKCHAIN_GAS_LIMIT ? parseInt(process.env.BLOCKCHAIN_GAS_LIMIT) : 32100000000,
+    gasPrice: process.env.BLOCKCHAIN_GAS_PRICE ? parseInt(process.env.BLOCKCHAIN_GAS_PRICE) : 1,
   }
   // Unused code notice. Node stats disabled, to be deprecated  #node-stats-deprecation
   // statistics: {
