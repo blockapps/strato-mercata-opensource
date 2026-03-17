@@ -97,6 +97,9 @@ build_buildbase:
 	@echo building buildbase...
 	docker build --build-arg STACK_RESOLVER=${STACK_RESOLVER} --tag=strato-buildbase:${STACK_RESOLVER} - < Dockerfile.buildbase
 
+build_buildbase_arm64:
+	docker build --platform linux/arm64 -f Dockerfile.buildbase.arm64 --tag=strato-buildbase:lts-22.4-arm64 .
+
 build_formatter:
 	@echo building code formatter...
 	docker build --build-arg STACK_RESOLVER=${STACK_RESOLVER} --tag=strato-formatter:${STACK_RESOLVER} - < Dockerfile.formatter

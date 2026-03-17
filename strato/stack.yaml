@@ -153,8 +153,8 @@ ghc-options:
 # Use the -ddump-simpl-stats flag to see detailed counts of the simplifier's work, which can help you identify the specific parts of your code that are causing the problem.
 
 
-docker:
-  enable: true
-  image: "strato-buildbase:lts-22.4"
-  set-user: true
-  run-args: ["--ulimit=nofile=60000"]
+# docker:
+#   enable: true
+#   image: "strato-buildbase:lts-22.4-arm64"
+
+system-ghc: true
