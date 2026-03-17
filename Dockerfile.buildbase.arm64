@@ -1,0 +1,24 @@
+FROM haskell:8.10-buster
+
+# Install Stack (latest version)
+RUN curl -sSL https://get.haskellstack.org/ | sh
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get -y --allow-unauthenticated install autoconf libtool libblas-dev liblapack-dev libsodium-dev jq vim liblzma-dev libleveldb-dev libpq-dev pkg-config && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+# Build and install secp256k1
+RUN git clone https://github.com/blockapps/secp256k1 && \
+    cd secp256k1/ && \
+    ./autogen.sh && \
+    ./configure --enable-module-recovery --enable-experimental --enable-module-ecdh && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf secp256k1
+
+# Set default workdir
+WORKDIR /strato-platform 

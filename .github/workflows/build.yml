@@ -1,0 +1,61 @@
+name: Build STRATO Platform
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build buildbase image
+      run: |
+        docker build --platform linux/amd64 --build-arg STACK_RESOLVER=lts-22.4 --tag=strato-buildbase:lts-22.4 - < Dockerfile.buildbase
+        
+    - name: Build common components
+      run: |
+        mkdir -p .docker-work/highway
+        mkdir -p .docker-work/strato
+        mkdir -p .docker-work/vault-wrapper
+        mkdir -p .docker-work/identity-provider
+        cd strato && stack build --test --no-run-tests --copy-bins --local-bin-path=../.docker-work/usr/local/bin
+        
+    - name: Build Docker images
+      run: |
+        # Build strato image
+        cp -fr strato/extraFiles/* .docker-work/strato/
+        docker build --platform linux/amd64 --target strato --tag strato:latest --file Dockerfile.multi .docker-work
+        
+        # Build highway image
+        cp strato/highway/doit.sh .docker-work/highway/
+        docker build --platform linux/amd64 --target highway --tag highway:latest --file Dockerfile.multi .docker-work
+        
+        # Build vault-wrapper image
+        cp strato/vault/doit.sh .docker-work/vault-wrapper/
+        docker build --platform linux/amd64 --target vault-wrapper --tag vault-wrapper:latest --file Dockerfile.multi .docker-work
+        
+        # Build identity-provider image
+        cp strato/identity-provider/doit.sh .docker-work/identity-provider/
+        docker build --platform linux/amd64 --target identity-provider --tag identity-provider:latest --file Dockerfile.multi .docker-work
+        
+    - name: Generate docker-compose files
+      run: |
+        make docker-compose
+        
+    - name: List built images
+      run: |
+        docker images | grep -E "(strato|highway|vault|identity)"
+        
+    - name: Test basic functionality
+      run: |
+        # Test that the main executables were built
+        ls -la .docker-work/usr/local/bin/ | head -10 
